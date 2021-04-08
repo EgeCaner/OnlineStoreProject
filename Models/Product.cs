@@ -1,5 +1,4 @@
 using System;
-
 namespace OnlineStoreProject.Models
 {
     public class Product
