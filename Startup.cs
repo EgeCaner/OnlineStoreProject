@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using OnlineStoreProject_Intf;
+
 using OnlineStoreProject_Intf.IAuthenticationService;
 using OnlineStoreProject.Data.DataContext;
 
