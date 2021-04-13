@@ -5,9 +5,12 @@ using OnlineStoreProject.Request.UserRegisterRequest;
 using OnlineStoreProject.Response.AuthenticationResponse;
 using OnlineStoreProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStoreProject.Request.ChangePasswordRequest;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineStoreProject.Controllers.AuthenticationController
-{   [ApiController]
+{   [Authorize]
+    [ApiController]
     [Route("[controller]")]
     public class AuthenticationController: ControllerBase
     {
@@ -18,6 +21,7 @@ namespace OnlineStoreProject.Controllers.AuthenticationController
             _authService = authService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> Register(UserRegisterRequest request)
         {
@@ -28,7 +32,7 @@ namespace OnlineStoreProject.Controllers.AuthenticationController
             }
             return Ok(response);
         }
-
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLoginRequest request)
         {
@@ -40,6 +44,15 @@ namespace OnlineStoreProject.Controllers.AuthenticationController
             return Ok(response);
         }
 
-        
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            AuthenticationResponse<string> response = await _authService.ChangePassword(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

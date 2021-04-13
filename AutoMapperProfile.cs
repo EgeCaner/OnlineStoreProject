@@ -8,6 +8,9 @@ namespace OnlineStoreProject
     {
         public AutoMapperProfile(){
             CreateMap<Customer, CustomerDTO>();
+            CreateMap<CustomerDTO,Customer>();
+            CreateMap<Product,ProductDTO>();
+            CreateMap<ProductDTO, Product>();
         }
     }
 }

@@ -3,7 +3,7 @@ using OnlineStoreProject.Models;
 using System.Collections.Generic;
 
 
-namespace onlinestoreproject_be.DTOs
+namespace OnlineStoreProject.DTOs
 {
     public class ProductDTO
     {

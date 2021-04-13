@@ -16,7 +16,8 @@ using Microsoft.AspNetCore.Authorization;
 using OnlineStoreProject.Services.CustomerService;
 
 namespace OnlineStoreProject.Controllers.CustomerController
-{   [Authorize]
+{   
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CustomerController : ControllerBase{
@@ -26,11 +27,47 @@ namespace OnlineStoreProject.Controllers.CustomerController
 
             _customerService = customerService;
         }
-        [AllowAnonymous] // use this except for ordering buyin etc.. the conditions that user need to login
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll() {
-            return Ok(await _customerService.GetAllCustomers());
 
+        [HttpGet("GetAll")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAll() {
+            CustomerServiceResponse<List<CustomerDTO>> response = await _customerService.GetAllCustomers();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
+
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(){
+            CustomerServiceResponse<CustomerDTO> response =await _customerService.GetCustomerById();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(){
+            CustomerServiceResponse<string> response =await _customerService.DeleteUser();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateUser(CustomerDTO request){
+            CustomerServiceResponse<CustomerDTO> response = await _customerService.UpdateUser(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
    }
 }
