@@ -3,14 +3,13 @@ using OnlineStoreProject.DTOs;
 using OnlineStoreProject.Response;
 using System.Collections.Generic;
 
-
 namespace OnlineStoreProject_Intf
 {
     public interface ICustomerService
     {
-        Task<CustomerServiceResponse<List<CustomerDTO>>> GetAllCustomers();
-        Task<CustomerServiceResponse<CustomerDTO>> GetCustomerById();
-        Task<CustomerServiceResponse<string>> DeleteUser();
-        Task<CustomerServiceResponse<CustomerDTO>> UpdateUser(CustomerDTO request);
+        Task<ServiceResponse<List<CustomerDTO>>> GetAllCustomers();
+        Task<ServiceResponse<CustomerDTO>> GetCustomerById();
+        Task<ServiceResponse<string>> DeleteUser();
+        Task<ServiceResponse<CustomerDTO>> UpdateUser(CustomerDTO request);
     }
 }

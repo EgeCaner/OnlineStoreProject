@@ -16,6 +16,7 @@ using AutoMapper;
 using OnlineStoreProject_Intf;
 using OnlineStoreProject.Services.CustomerService;
 using OnlineStoreProject.Services.AuthenticationService;
+using OnlineStoreProject.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -64,6 +65,7 @@ namespace OnlineStoreProject
                 };
             });
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+            services.AddScoped<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

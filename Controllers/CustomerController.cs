@@ -31,7 +31,7 @@ namespace OnlineStoreProject.Controllers.CustomerController
         [HttpGet("GetAll")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll() {
-            CustomerServiceResponse<List<CustomerDTO>> response = await _customerService.GetAllCustomers();
+            ServiceResponse<List<CustomerDTO>> response = await _customerService.GetAllCustomers();
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -41,7 +41,7 @@ namespace OnlineStoreProject.Controllers.CustomerController
 
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(){
-            CustomerServiceResponse<CustomerDTO> response =await _customerService.GetCustomerById();
+            ServiceResponse<CustomerDTO> response =await _customerService.GetCustomerById();
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -51,7 +51,7 @@ namespace OnlineStoreProject.Controllers.CustomerController
 
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(){
-            CustomerServiceResponse<string> response =await _customerService.DeleteUser();
+            ServiceResponse<string> response =await _customerService.DeleteUser();
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -61,7 +61,7 @@ namespace OnlineStoreProject.Controllers.CustomerController
 
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateUser(CustomerDTO request){
-            CustomerServiceResponse<CustomerDTO> response = await _customerService.UpdateUser(request);
+            ServiceResponse<CustomerDTO> response = await _customerService.UpdateUser(request);
             if (!response.Success)
             {
                 return BadRequest(response);

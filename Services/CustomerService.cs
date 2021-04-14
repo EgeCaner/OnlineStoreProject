@@ -29,8 +29,8 @@ namespace OnlineStoreProject.Services.CustomerService
         }
         
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-        public async Task<CustomerServiceResponse<List<CustomerDTO>>> GetAllCustomers(){
-            CustomerServiceResponse<List<CustomerDTO>> response = new CustomerServiceResponse<List<CustomerDTO>>();
+        public async Task<ServiceResponse<List<CustomerDTO>>> GetAllCustomers(){
+            ServiceResponse<List<CustomerDTO>> response = new ServiceResponse<List<CustomerDTO>>();
             try{
             List<Customer> dbCustomers = await _context.Customers.ToListAsync();
             response.Data= (dbCustomers.Select(c => _mapper.Map<CustomerDTO>(c))).ToList();
@@ -45,8 +45,8 @@ namespace OnlineStoreProject.Services.CustomerService
             return response;
         }
 
-        public async Task<CustomerServiceResponse<CustomerDTO>> GetCustomerById(){
-            CustomerServiceResponse<CustomerDTO> response = new CustomerServiceResponse<CustomerDTO>();
+        public async Task<ServiceResponse<CustomerDTO>> GetCustomerById(){
+            ServiceResponse<CustomerDTO> response = new ServiceResponse<CustomerDTO>();
             try{
             Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
             response.Data =  _mapper.Map<CustomerDTO>(dbCustomer);
@@ -60,8 +60,8 @@ namespace OnlineStoreProject.Services.CustomerService
             return response;
         }
         
-        public async Task<CustomerServiceResponse<string>> DeleteUser(){
-            CustomerServiceResponse<string> response = new CustomerServiceResponse<string>();
+        public async Task<ServiceResponse<string>> DeleteUser(){
+            ServiceResponse<string> response = new ServiceResponse<string>();
             try{
                 Customer customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
                 if (customer != null)
@@ -85,8 +85,8 @@ namespace OnlineStoreProject.Services.CustomerService
             return response;
         }
 
-        public async Task<CustomerServiceResponse<CustomerDTO>> UpdateUser(CustomerDTO request){
-            CustomerServiceResponse<CustomerDTO> response = new CustomerServiceResponse<CustomerDTO>();
+        public async Task<ServiceResponse<CustomerDTO>> UpdateUser(CustomerDTO request){
+            ServiceResponse<CustomerDTO> response = new ServiceResponse<CustomerDTO>();
             try{
                 Customer customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
                 if (customer ==null){
