@@ -9,6 +9,6 @@ namespace OnlineStoreProject.Models
         public string PhoneNumber{get; set;} = null;
         public string MailAddress { get; set; } = null;
         public byte[] PasswordHash { get; set;} = null;
-        public byte[] PaswordSalt {get; set;} = null;    
+        public byte[] PasswordSalt {get; set;} = null;    
     }
 }

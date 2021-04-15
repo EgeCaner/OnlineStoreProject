@@ -3,11 +3,12 @@ using OnlineStoreProject.Models;
 using System.Collections.Generic;
 
 
-namespace onlinestoreproject_be.DTOs
+namespace OnlineStoreProject.DTOs
 {
     public class ProductDTO
     {
-        public int ProductId{get; set;} 
+        public int ProductId{get; set;}
+        public int CategoryId{get; set;}
         public string ProductName{get; set;}= null;
         public string Description{get; set;}= null;
         public string ImageUrl{get; set;}= null;

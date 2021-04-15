@@ -13,25 +13,25 @@ using OnlineStoreProject.Response;
 using OnlineStoreProject.OnlineStoreConstants.MessageConstants;
 using OnlineStoreProject_Intf;
 using Microsoft.AspNetCore.Authorization;
-using OnlineStoreProject.Services.CustomerService;
+using OnlineStoreProject.Services;
 
-namespace OnlineStoreProject.Controllers.CustomerController
+namespace OnlineStoreProject.Controllers
 {   
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class CustomerController : ControllerBase{
-        private readonly ICustomerService _customerService;
+    public class ProductController : ControllerBase
+    {
+        private readonly IProductService _productService;
+        public ProductController(IProductService productService){
 
-        public CustomerController(ICustomerService customerService){
-
-            _customerService = customerService;
+            _productService = productService; 
         }
 
         [HttpGet("GetAll")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll() {
-            ServiceResponse<List<CustomerDTO>> response = await _customerService.GetAllCustomers();
+            ServiceResponse<List<ProductDTO>> response = await _productService.GetAllProducts();
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -39,9 +39,19 @@ namespace OnlineStoreProject.Controllers.CustomerController
             return Ok(response);
         }
 
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(){
-            ServiceResponse<CustomerDTO> response =await _customerService.GetCustomerById();
+        [HttpPut("Add")]
+        public async Task<IActionResult> AddProduct(ProductDTO request){
+            ServiceResponse<string> response = await _productService.AddProduct(request);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        } 
+
+        [HttpGet("GetById/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetById(int Id){
+            ServiceResponse<ProductDTO> response = await _productService.GetProductById(Id);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -49,9 +59,9 @@ namespace OnlineStoreProject.Controllers.CustomerController
             return Ok(response);
         }
 
-        [HttpDelete("DeleteUser")]
-        public async Task<IActionResult> DeleteUser(){
-            ServiceResponse<string> response =await _customerService.DeleteUser();
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int Id){
+            ServiceResponse<string> response = await _productService.DeleteProductById(Id);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -60,14 +70,13 @@ namespace OnlineStoreProject.Controllers.CustomerController
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateUser(CustomerDTO request){
-            ServiceResponse<CustomerDTO> response = await _customerService.UpdateUser(request);
+        public async Task<IActionResult> Update(ProductDTO request){
+            ServiceResponse<ProductDTO> response = await _productService.UpdateProduct(request);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-
-   }
+    }
 }
