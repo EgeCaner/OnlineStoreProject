@@ -19,5 +19,12 @@ namespace OnlineStoreProject.OnlineStoreConstants.MessageConstants
         public const string PRODUCT_NOT_FOUND = "Product not found";
         public const string PRODUCT_UPDATE_SUCCESS = "Product updated succefuly";
         public const string PRODUCT_UPDATE_FAIL = "Product update failed";
+        public const string COMMENT_ADD_SUCCESS = "Comment added succesfuly";
+        public const string COMMENT_ADD_FAIL = "Comment add failed";
+        public const string COMMENT_UPDATE_SUCCESS = "Comment updated succesfuly";
+        public const string COMMENT_UPDATE_FAIL = "Comment update failed";
+        public const string COMMENT_DELETE_FAIL = "Comment delete failed";
+        public const string COMMENT_DELETE_SUCCESS = "Comment deleted  succesfuly";
+        
     }
 }
