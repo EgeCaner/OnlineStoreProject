@@ -78,5 +78,70 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("GetByCategory/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByCategory(int id){
+             ServiceResponse<List<ProductDTO>> response = await _productService.GetProductByCategory(id);
+             if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        [HttpGet("GetAllCategories")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllCategories() {
+            ServiceResponse<List<int>> response = await _productService.GetAllCategories();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        [HttpPut("AddComment")]
+        public async Task<IActionResult> AddComment(Comment request){
+            ServiceResponse<string> response = await _productService.AddComment(request);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        } 
+
+        [HttpPut("UpdateComment")]
+        public async Task<IActionResult> UpdateComment(Comment request){
+            ServiceResponse<Comment> response = await _productService.UpdateComment(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("GetAllComments/{Id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllComments(int Id) {
+            ServiceResponse<List<Comment>> response = await _productService.GetAllComments(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteComment/{id}")]
+        public async Task<IActionResult> DeleteComment(int Id){
+            ServiceResponse<string> response = await _productService.DeleteCommentById(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        
     }
 }

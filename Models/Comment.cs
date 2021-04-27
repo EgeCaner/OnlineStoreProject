@@ -1,3 +1,5 @@
+using System;
+
 namespace OnlineStoreProject.Models
 {
     public class Comment
@@ -6,7 +8,7 @@ namespace OnlineStoreProject.Models
         public int ProductId {get; set;}
         public string CommentorName{get;set;}
         public string Description{get; set;}//Comment from the customer
-        public System.DateTime Date{get; set;}
-        public int Like{get; set;}
+        public  Nullable<System.DateTime> Date{get; set;}
+        public Nullable<int> Like{get; set;} = 0;
     }
 }

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using OnlineStoreProject.DTOs;
 using OnlineStoreProject.Response;
 using System.Collections.Generic;
+using OnlineStoreProject.Models;
 
 namespace OnlineStoreProject_Intf
 {
@@ -12,5 +13,11 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<ProductDTO>> GetProductById(int Id);
         Task<ServiceResponse<string>> DeleteProductById(int Id);
         Task<ServiceResponse<ProductDTO>> UpdateProduct(ProductDTO request);
+        Task<ServiceResponse<List<ProductDTO>>> GetProductByCategory(int Id);
+        Task<ServiceResponse<string>> AddComment(Comment request);
+        Task<ServiceResponse<Comment>> UpdateComment(Comment request);
+        Task<ServiceResponse<List<int>>> GetAllCategories();
+        Task<ServiceResponse<List<Comment>>> GetAllComments(int Id);
+        Task<ServiceResponse<string>> DeleteCommentById(int Id);
     }
 }
