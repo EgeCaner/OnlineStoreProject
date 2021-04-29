@@ -40,6 +40,7 @@ namespace OnlineStoreProject.Controllers
         }
 
         [HttpPut("Add")]
+        [AllowAnonymous]
         public async Task<IActionResult> AddProduct(ProductDTO request){
             ServiceResponse<string> response = await _productService.AddProduct(request);
             if (!response.Success){

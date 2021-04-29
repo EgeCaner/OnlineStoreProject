@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Filters;
 using OnlineStoreProject_Intf.IAuthenticationService;
 using OnlineStoreProject.Data.DataContext;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace OnlineStoreProject
 {
@@ -39,11 +40,16 @@ namespace OnlineStoreProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //string connectionString = Configuration.GetConnectionString("myDb1");
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddDbContext<DataContext>(x=> x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+
+            services.AddDbContext<DataContext>(options =>
+            options.UseMySql(connectionString,new MySqlServerVersion(new Version(10, 1, 40)), mySqlOptionsAction: mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));     
+            //services.AddDbContext<DataContext>(x=> x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineStoreProject", Version = "v1" });
