@@ -16,6 +16,7 @@ using OnlineStoreProject.OnlineStoreConstants.MessageConstants;
 using OnlineStoreProject.Data.DataContext;
 using OnlineStoreProject.Request.ChangePasswordRequest;
 using Microsoft.AspNetCore.Http;
+using onlinestoreproject_be.Services;
 
 namespace OnlineStoreProject.Services.AuthenticationService
 {
@@ -44,7 +45,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
                     response.Message = MessageConstants.USER_EXIST;  
                     return response;
                 }
-                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 Customer user = new Customer{Name=request.Name,Surname= request.Surname,Username= request.Username, 
                 MailAddress=request.MailAddress,PhoneNumber= request.PhoneNumber, PasswordHash = passwordHash,PasswordSalt=passwordSalt};
 
@@ -92,14 +93,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
             }
             return false;
         }
-         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -155,7 +149,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
                     response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
                 }
                 else{
-                    CreatePasswordHash(request.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+                    onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
                     customer.PasswordHash= passwordHash;
                     customer.PasswordSalt = passwordSalt;
                     _context.Customers.Update(customer);
