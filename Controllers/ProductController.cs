@@ -142,5 +142,25 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+
+        [HttpPut("ApproveComment/{id}")]
+        public async Task<IActionResult> ApproveComment(int Id){
+            ServiceResponse<string> response = await _productService.ApproveComment(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("RejectComment/{id}")]
+        public async Task<IActionResult> RejectComment(int Id){
+            ServiceResponse<string> response = await _productService.RejectComment(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
