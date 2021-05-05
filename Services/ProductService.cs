@@ -286,6 +286,8 @@ namespace OnlineStoreProject.Services
                 if(comment != null){
                     _context.Comments.Remove(comment);
                     await _context.SaveChangesAsync();
+                    response.Success = true;
+                    response.Message = MessageConstants.COMMENT_REJECT_SUCCESS;
                 }else{
                     response.Message = MessageConstants.COMMENT_NOT_FOUND;
                     response.Success= false;
