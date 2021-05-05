@@ -60,9 +60,29 @@ namespace OnlineStoreProject.Controllers
             return Ok(response);
         }
 
-        [HttpPut("Update")]
-        public async Task<IActionResult> Update(ShoppingCartDTO request){
-            ServiceResponse<ShoppingCartDTO> response = await _shoppingCartService.UpdateCart(request);
+        [HttpPut("AddCartItem")]
+        public async Task<IActionResult> AddCartItem(CartItem request){
+            ServiceResponse<string> response = await _shoppingCartService.AddCartItem(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete("DeleteCartItem/{id}")]
+        public async Task<IActionResult> DeleteCartItem(int Id){
+            ServiceResponse<string> response = await _shoppingCartService.DeleteCartItem(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        
+        [HttpPut("UpdateCartItem")]
+        public async Task<IActionResult> UpdateCartItem(CartItem request){
+            ServiceResponse<string> response = await _shoppingCartService.UpdateCartItem(request);
             if (!response.Success)
             {
                 return BadRequest(response);

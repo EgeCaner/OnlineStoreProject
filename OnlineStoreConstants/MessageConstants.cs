@@ -25,6 +25,20 @@ namespace OnlineStoreProject.OnlineStoreConstants.MessageConstants
         public const string COMMENT_UPDATE_FAIL = "Comment update failed";
         public const string COMMENT_DELETE_FAIL = "Comment delete failed";
         public const string COMMENT_DELETE_SUCCESS = "Comment deleted  succesfuly";
-        
+        public const string CARTITEM_ADD_SUCCES = "Cart Item added succesfuly";
+        public const string CARTITEM_DELETE_SUCCESS =  "Cart Item deleted succesfuly";
+        public const string CARTITEM_UPDATE_SUCCES = "Cart Item updated succesfuly";
+        public const string CARTITEM_NOT_FOUND = "Cart Item not found";
+        public const string SHOPPINGCART_ADD_SUCCES = "Shopping cart added succesfuly";
+        public const string SHOPPINGCART_DELETE_SUCCESS =  "Shopping cart deleted succesfuly";
+        public const string SHOPPINGCART_UPDATE_SUCCES = "Shopping cartupdated succesfuly";
+        public const string SHOPPINGCART_NOT_FOUND = "Shopping cart not found";
+        public const string ORDER_ADD_SUCCES = "Order added succesfuly";
+        public const string ORDER_DELETE_SUCCESS =  "Order deleted succesfuly";
+        public const string ORDER_UPDATE_SUCCES = "Order updated succesfuly";
+        public const string ORDER_NOT_FOUND = "Order not found";        
+        public const string COMMENT_APPROVE_SUCCESS = "Comment approved succesfuly";
+        public const string COMMENT_REJECT_SUCCESS = "Comment reject succesfuly";
+        public const string COMMENT_NOT_FOUND = "Comment not found";
     }
 }

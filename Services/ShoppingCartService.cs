@@ -53,7 +53,7 @@ namespace OnlineStoreProject.Services
                 }
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.PRODUCT_ADD_SUCCESS;// change the message
+                response.Message = MessageConstants.SHOPPINGCART_ADD_SUCCES;
             }catch(Exception e){
                 response.Success = false;
                 response.Message = e.Message;
@@ -77,12 +77,12 @@ namespace OnlineStoreProject.Services
                     _context.ShoppingCarts.Remove(cart);
                     await _context.SaveChangesAsync();
                     response.Success = true;
-                    response.Message = MessageConstants.PRODUCT_DELETE_SUCCESS;//Change Message
+                    response.Message = MessageConstants.SHOPPINGCART_DELETE_SUCCESS;
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = MessageConstants.PRODUCT_NOT_FOUND; //Change Message
+                    response.Message = MessageConstants.SHOPPINGCART_NOT_FOUND;
                 }
 
             }catch(Exception e){
@@ -121,7 +121,7 @@ namespace OnlineStoreProject.Services
                     }
                 }
                 else{
-                    response.Message = "User does not have a cart!";
+                    response.Message = MessageConstants.SHOPPINGCART_NOT_FOUND;
                     response.Success = false;
                 }
             }catch(Exception e){
@@ -131,26 +131,80 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-        public async Task<ServiceResponse<ShoppingCartDTO>> UpdateCart(ShoppingCartDTO request)
+        public async Task<ServiceResponse<string>> AddCartItem(CartItem request)
         {
-            ServiceResponse<ShoppingCartDTO> response = new ServiceResponse<ShoppingCartDTO>();
+            ServiceResponse<string> response = new ServiceResponse<string>();
             try{
                 ShoppingCart cart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId());
                 if (cart ==null){
+                    
                     response.Success = false;
-                    response.Message = MessageConstants.PRODUCT_UPDATE_FAIL;//change the message
+                    response.Message = MessageConstants.SHOPPINGCART_NOT_FOUND;
                     return response;
                 }
+                CartItem cartItem = new CartItem();
+                cartItem.ProductId=request.ProductId;
+                cartItem.ShoppingCart = cart;
+                cartItem.Quantity = request.Quantity;
+                cartItem.CreateDate = DateTime.Now;
+                await _context.CartItems.AddAsync(cartItem);
+                    
                 cart.ModifyDate = DateTime.Now;
                 _context.ShoppingCarts.Update(cart);
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.PRODUCT_UPDATE_SUCCESS;//change the message
+                response.Message = MessageConstants.CARTITEM_ADD_SUCCES;
 
 
             }catch(Exception e){
                 response.Success = false;
                 response.Message= e.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> DeleteCartItem(int Id)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == Id);
+                if(cartItem != null){
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();                
+                response.Success = true;
+                response.Message = MessageConstants.CARTITEM_DELETE_SUCCESS;
+                }else{
+                    response.Success= false;
+                    response.Message = MessageConstants.CARTITEM_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> UpdateCartItem(CartItem request)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == request.Id);
+                if(cartItem != null){
+                    cartItem.ModifyDate = DateTime.Now;
+                    cartItem.ProductId = request.ProductId;
+                    cartItem.Quantity = request.Quantity;
+                    cartItem.ShoppingCart = request.ShoppingCart;
+                    _context.CartItems.Update(cartItem);
+                    await _context.SaveChangesAsync();
+                    response.Message = MessageConstants.CARTITEM_UPDATE_SUCCES;
+                    response.Success = true;
+                }else{
+                    response.Message = MessageConstants.CARTITEM_NOT_FOUND;
+                    response.Success = false; 
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
             }
             return response;
         }

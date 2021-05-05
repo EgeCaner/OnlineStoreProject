@@ -257,5 +257,44 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
+
+        public async Task<ServiceResponse<string>> ApproveComment(int Id){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == Id);
+                if(comment != null){
+                comment.isApproved = true;
+                _context.Comments.Update(comment);
+                await _context.SaveChangesAsync();
+                response.Message= MessageConstants.COMMENT_APPROVE_SUCCESS;
+                response.Success = true;
+                }else{
+                    response.Message = MessageConstants.COMMENT_NOT_FOUND;
+                    response.Success= false;
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        }
+        
+        public async Task<ServiceResponse<string>> RejectComment(int Id){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == Id);
+                if(comment != null){
+                    _context.Comments.Remove(comment);
+                    await _context.SaveChangesAsync();
+                }else{
+                    response.Message = MessageConstants.COMMENT_NOT_FOUND;
+                    response.Success= false;
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        }
     }
 }
