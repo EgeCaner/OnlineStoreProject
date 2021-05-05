@@ -142,7 +142,5 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
-
-        
     }
 }

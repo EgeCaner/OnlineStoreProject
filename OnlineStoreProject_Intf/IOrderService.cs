@@ -12,5 +12,7 @@ namespace OnlineStoreProject_Intf
         
         Task<ServiceResponse<List<OrderDTO>>> GetAllOrders();
         Task<ServiceResponse<string>> AddOrder(OrderDTO request);
+        Task<ServiceResponse<OrderDTO>> UpdateOrder(OrderDTO request);
+
     }
 }

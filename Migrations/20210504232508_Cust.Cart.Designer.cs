@@ -2,44 +2,49 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineStoreProject.Data.DataContext;
 
 namespace OnlineStoreProject.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210504232508_Cust.Cart")]
+    partial class CustCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("OnlineStoreProject.Models.CartItem", b =>
+            modelBuilder.Entity("OnlineStoreProject.DTOs.ProductDTO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool?>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("ProductId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("double");
 
                     b.Property<int?>("ShoppingCartId")
                         .HasColumnType("int");
@@ -48,7 +53,7 @@ namespace OnlineStoreProject.Migrations
 
                     b.HasIndex("ShoppingCartId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("ProductDTO");
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.Comment", b =>
@@ -69,6 +74,9 @@ namespace OnlineStoreProject.Migrations
                     b.Property<int?>("Like")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductDTOId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -76,6 +84,8 @@ namespace OnlineStoreProject.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("commentId");
+
+                    b.HasIndex("ProductDTOId");
 
                     b.ToTable("Comments");
                 });
@@ -185,6 +195,9 @@ namespace OnlineStoreProject.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -222,13 +235,18 @@ namespace OnlineStoreProject.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OnlineStoreProject.Models.CartItem", b =>
+            modelBuilder.Entity("OnlineStoreProject.DTOs.ProductDTO", b =>
                 {
-                    b.HasOne("OnlineStoreProject.Models.ShoppingCart", "ShoppingCart")
-                        .WithMany()
+                    b.HasOne("OnlineStoreProject.Models.ShoppingCart", null)
+                        .WithMany("Items")
                         .HasForeignKey("ShoppingCartId");
+                });
 
-                    b.Navigation("ShoppingCart");
+            modelBuilder.Entity("OnlineStoreProject.Models.Comment", b =>
+                {
+                    b.HasOne("OnlineStoreProject.DTOs.ProductDTO", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductDTOId");
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.Customer", b =>
@@ -238,6 +256,16 @@ namespace OnlineStoreProject.Migrations
                         .HasForeignKey("CartId");
 
                     b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("OnlineStoreProject.DTOs.ProductDTO", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("OnlineStoreProject.Models.ShoppingCart", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

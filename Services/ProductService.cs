@@ -200,6 +200,7 @@ namespace OnlineStoreProject.Services
 
                 comment.Description = request.Description;
                 comment.Date = DateTime.Now;
+                
 
                 _context.Comments.Update(comment);
                 await _context.SaveChangesAsync();
@@ -256,7 +257,5 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-
-
     }
 }

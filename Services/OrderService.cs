@@ -30,9 +30,9 @@ namespace OnlineStoreProject.Services
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-          private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-          public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrders()
-            {
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrders()
+        {
             ServiceResponse<List<OrderDTO>> response = new ServiceResponse<List<OrderDTO>>();
             try{
             List<Order> dbOrders = await _context.Orders.ToListAsync();
@@ -71,22 +71,24 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-            public async Task<ServiceResponse<Order>> UpdateOrder(Order request){
-            ServiceResponse<Order> response = new ServiceResponse<Order>();
+            public async Task<ServiceResponse<OrderDTO>> UpdateOrder(OrderDTO request){
+            ServiceResponse<OrderDTO> response = new ServiceResponse<OrderDTO>();
             try{
                 Order order = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (order == null){
                     response.Success = false;
-                    response.Message = MessageConstants.COMMENT_UPDATE_FAIL;
+                    response.Message = MessageConstants.COMMENT_UPDATE_FAIL;//Change the message
                     return response;
                 }
 
+                order.Status = request.Status;
+                order.Quantity = request.Quantity;
+                order.Price= request.Price;
                 order.CreateDate = DateTime.Now;
-
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.COMMENT_UPDATE_SUCCESS;
+                response.Message = MessageConstants.COMMENT_UPDATE_SUCCESS;//change to order message
 
 
             }catch(Exception e){
