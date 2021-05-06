@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using Pomelo.EntityFrameworkCore.MySql;
-using onlinestoreproject_be.Models;
-using onlinestoreproject_be.Services;
+using OnlineStoreProject.Services;
 
 namespace OnlineStoreProject.Data.DataContext
 {
@@ -29,16 +28,8 @@ namespace OnlineStoreProject.Data.DataContext
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
      }
-    /*
     protected override void OnModelCreating(ModelBuilder modelBuilder){
-        Utility.CreatePasswordHash("12345",out byte[] passwordHash, out byte[] passwordSalt);
-        modelBuilder.Entity<Customer>().HasData(
-            
-        );
-            
-        //modelBuilder.Entity<Comment>()
-            //..Property(Comment => Comment.).HasDefaultValue()
+            modelBuilder.Entity<Customer>().Property(c => c.Role).HasDefaultValue("Customer");
     }
-    */
     }
 }

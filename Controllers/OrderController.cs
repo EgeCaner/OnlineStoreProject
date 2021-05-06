@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStoreProject.DTOs;
 using OnlineStoreProject.Response;
 using OnlineStoreProject_Intf;
-using onlinestoreproject_be.Models;
+using OnlineStoreProject.Models;
 
-namespace onlinestoreproject_be.Controllers
+namespace OnlineStoreProject.Controllers
 {
         [Authorize]
         [ApiController]

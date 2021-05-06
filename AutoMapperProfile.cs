@@ -2,7 +2,6 @@ using System.Linq;
 using AutoMapper;
 using OnlineStoreProject.Models;
 using OnlineStoreProject.DTOs;
-using onlinestoreproject_be.Models;
 
 namespace OnlineStoreProject
 {

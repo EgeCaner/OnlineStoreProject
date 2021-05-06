@@ -1,6 +1,6 @@
 using System;
 
-namespace onlinestoreproject_be.Models
+namespace OnlineStoreProject.Models
 {
     public class Order
     {   

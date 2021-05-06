@@ -12,8 +12,6 @@ using OnlineStoreProject.DTOs;
 using OnlineStoreProject.Models;
 using OnlineStoreProject.OnlineStoreConstants.MessageConstants;
 using OnlineStoreProject.Response;
-
-using onlinestoreproject_be.Models;
 using OnlineStoreProject_Intf;
 
 namespace OnlineStoreProject.Services
