@@ -17,6 +17,7 @@ namespace OnlineStoreProject
             CreateMap<Order, OrderDTO>();
             CreateMap<ShoppingCart,ShoppingCartDTO>();
             CreateMap<ShoppingCartDTO,ShoppingCart>();
+            CreateMap<Product,CartItemDTO>();
         }
     }
 }

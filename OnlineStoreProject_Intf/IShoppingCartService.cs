@@ -13,5 +13,7 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<string>> DeleteById();
         Task<ServiceResponse<string>> DeleteCartItem(int id);
         Task<ServiceResponse<string>> UpdateCartItem(CartItem request);
+
+        
     }
 }

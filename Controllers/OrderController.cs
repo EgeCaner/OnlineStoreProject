@@ -30,7 +30,7 @@ namespace onlinestoreproject_be.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("AddOrder")]
+        [HttpPost("Add")]
          public async Task<IActionResult> AddOrder(OrderDTO request){
             ServiceResponse<string> response = await _orderService.AddOrder(request);
             if (!response.Success){

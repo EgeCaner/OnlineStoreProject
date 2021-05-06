@@ -55,11 +55,11 @@ namespace OnlineStoreProject.Services
                 Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
                 if(request.Quantity > 0 && ((product.Quantity - request.Quantity) >= 0) ){
                 product.Quantity = product.Quantity - request.Quantity;
-                }
-        
-           
+                _context.Products.Update(product);
+                }        
                 Order Order = _mapper.Map<Order>(request);
                 Order.CreateDate = DateTime.Now;
+                Order.CustomerId = GetUserId();
 
                 await _context.Orders.AddAsync(Order);
                 await _context.SaveChangesAsync();

@@ -9,6 +9,7 @@ namespace onlinestoreproject_be.Models
         public int ProductId{get;set;}
         public int CustomerId{get; set;}
         public int Status{get; set;}
+        public string Address {get; set;}
         public Nullable<DateTime> CreateDate { get;  set; }
         public decimal Price {get; set;}
     }

@@ -17,7 +17,6 @@ namespace OnlineStoreProject.Data.DataContext
      public  DbSet <Order> Orders {get; set;}
      public virtual DbSet <Comment> Comments {get; set;}
      public virtual DbSet <ShoppingCart> ShoppingCarts {get; set;}
-
      public virtual DbSet <CartItem> CartItems {get; set;}
 
      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){

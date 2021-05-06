@@ -102,10 +102,12 @@ namespace OnlineStoreProject.Services
                 List<CartItem> cartItems = await _context.CartItems.Where(c => c.ShoppingCart.Id ==dbCart.Id).ToListAsync();
                     if(cartItems !=null){
                         int totalPrice = 0;
-                        List<ProductDTO> products = new List<ProductDTO>();
+                        List<CartItemDTO> products = new List<CartItemDTO>();
                         for(int i= 0; i<cartItems.Count; i++){
                             Product product= await _context.Products.FirstOrDefaultAsync(c => c.ProductId == cartItems[i].ProductId);
-                            ProductDTO prod = _mapper.Map<ProductDTO>(product);
+                            CartItemDTO prod = _mapper.Map<CartItemDTO>(product);
+                            prod.Quantity = cartItems[i].Quantity;
+                            prod.CartItemId= cartItems[i].Id;
                             if(prod != null){
                                 products.Add(prod);
                                 //totalPrice += product.Price* (decimal?)(int)cartItems[i].Quantity; 
@@ -113,11 +115,11 @@ namespace OnlineStoreProject.Services
                         }
                         ShoppingCartDTO newCart = new ShoppingCartDTO();
                         newCart.Id = dbCart.Id;
-                        newCart.Items=products;
+                        newCart.Items = products;
                         newCart.TotalPrice = totalPrice;
                         response.Data = newCart;
-                        response.Success=true;
-                        response.Message= "Ok";
+                        response.Success = true;
+                        response.Message = "Ok";
                     }
                 }
                 else{

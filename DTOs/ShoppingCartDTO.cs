@@ -7,7 +7,7 @@ namespace OnlineStoreProject.DTOs
     public class ShoppingCartDTO
     {
         public int Id {get; set;}
-        public List<ProductDTO> Items {get; set;}
+        public List<CartItemDTO> Items {get; set;}
         public decimal TotalPrice {get; set;}
     
     }
