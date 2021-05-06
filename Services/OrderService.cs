@@ -64,7 +64,7 @@ namespace OnlineStoreProject.Services
                 await _context.Orders.AddAsync(Order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.PRODUCT_ADD_SUCCESS;
+                response.Message = MessageConstants.ORDER_ADD_SUCCES;
             }catch(Exception e){
                 response.Success = false;
                 response.Message = e.Message;
@@ -77,7 +77,7 @@ namespace OnlineStoreProject.Services
                 Order order = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (order == null){
                     response.Success = false;
-                    response.Message = MessageConstants.COMMENT_UPDATE_FAIL;//Change the message
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;//Change the message
                     return response;
                 }
 
@@ -88,7 +88,7 @@ namespace OnlineStoreProject.Services
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.COMMENT_UPDATE_SUCCESS;//change to order message
+                response.Message = MessageConstants.ORDER_UPDATE_SUCCES;//change to order message
 
 
             }catch(Exception e){
@@ -97,6 +97,68 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-        
+
+        public async Task<ServiceResponse<List<OrderDTO>>> GetOrdersByUserId()
+        {
+            ServiceResponse<List<OrderDTO>> response  = new ServiceResponse<List<OrderDTO>>();
+            try{
+                List<Order> dbOrders = await _context.Orders.Where(c => c.CustomerId == GetUserId()).ToListAsync();
+                if(dbOrders != null){
+                    response.Data = (dbOrders.Select(c => _mapper.Map<OrderDTO>(c))).ToList();
+                    response.Message ="Ok";
+                    response.Success = true;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> DeleteOrderById(int Id)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Order dbOrder = await _context.Orders.FirstOrDefaultAsync(c => c.Id == Id);
+                if (dbOrder != null){
+                    _context.Orders.Remove(dbOrder);
+                    await _context.SaveChangesAsync();
+                    response.Message ="Ok";
+                    response.Success = true;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Success = false;
+                response.Message = e.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> ChangeOrderStatus(OrderDTO request)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Order dbOrder = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
+                if (dbOrder != null){
+                    dbOrder.Status = request.Status;
+                    _context.Orders.Update(dbOrder);
+                    await _context.SaveChangesAsync();
+                    response.Message= MessageConstants.ORDER_UPDATE_SUCCES;
+                    response.Success = true;
+                }else{
+                    response.Success =  false;
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        }
     }
 }

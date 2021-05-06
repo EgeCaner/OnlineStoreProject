@@ -51,7 +51,6 @@ namespace OnlineStoreProject.Services.AuthenticationService
 
                 await _context.Customers.AddAsync(user);
                 await _context.SaveChangesAsync();
-               //response.Data = user.Id;
                 response.Success=true;
                 response.Message= MessageConstants.USER_REGISTERED;
             }catch(Exception e){
@@ -139,7 +138,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
         public async Task<AuthenticationResponse<string>> ChangePassword(ChangePasswordRequest request){
             AuthenticationResponse<string> response = new AuthenticationResponse<string>();
             try{
-                Customer customer = await _context.Customers.FirstOrDefaultAsync( c => c.Username.ToLower().Equals(request.Username.ToLower()));
+                Customer customer = await _context.Customers.FirstOrDefaultAsync( c => c.Id == GetUserId());
                 if(customer == null){
                     response.Success= false;
                     response.Message = MessageConstants.USER_NOT_FOUND;

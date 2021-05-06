@@ -39,6 +39,30 @@ namespace onlinestoreproject_be.Controllers
             return Ok(response);
         } 
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetOrdersByUserId(){
+            ServiceResponse<List<OrderDTO>> response = await _orderService.GetOrdersByUserId();
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteOrder(int Id){
+            ServiceResponse<string> response = await _orderService.DeleteOrderById(Id);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPut("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(OrderDTO request){
+            ServiceResponse<string> response = await _orderService.ChangeOrderStatus(request);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

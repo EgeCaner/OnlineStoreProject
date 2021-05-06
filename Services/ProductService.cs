@@ -191,7 +191,7 @@ namespace OnlineStoreProject.Services
          public async Task<ServiceResponse<Comment>> UpdateComment(Comment request){
             ServiceResponse<Comment> response = new ServiceResponse<Comment>();
             try{
-                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == request.commentId);
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == request.CommentId);
                 if (comment == null){
                     response.Success = false;
                     response.Message = MessageConstants.COMMENT_UPDATE_FAIL;
@@ -236,7 +236,7 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<string>> DeleteCommentById(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == Id);
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == Id);
                 if (comment != null)
                 {
                     _context.Comments.Remove(comment);
@@ -261,9 +261,9 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<string>> ApproveComment(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == Id);
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == Id);
                 if(comment != null){
-                comment.isApproved = true;
+                comment.IsApproved = true;
                 _context.Comments.Update(comment);
                 await _context.SaveChangesAsync();
                 response.Message= MessageConstants.COMMENT_APPROVE_SUCCESS;
@@ -282,7 +282,7 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<string>> RejectComment(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.commentId == Id);
+                Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == Id);
                 if(comment != null){
                     _context.Comments.Remove(comment);
                     await _context.SaveChangesAsync();

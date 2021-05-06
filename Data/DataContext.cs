@@ -11,17 +11,13 @@ namespace OnlineStoreProject.Data.DataContext
 {
     public class DataContext : DbContext
     {
-    public DataContext()
-    {
-    }
-     //public virtual Microsoft.EntityFrameworkCore.DbContextOptionsBuilder UseLoggerFactory (Microsoft.Extensions.Logging.ILoggerFactory loggerFactory);
-     //public partial void LoggerFactory (System.Collections.Generic.IEnumerable<Microsoft.Extensions.Logging.ILoggerProvider> providers, Microsoft.Extensions.Logging.LoggerFilterOptions filterOptions);
      public DataContext(DbContextOptions<DataContext> options): base(options){}
      public virtual DbSet <Customer> Customers {get; set;}
      public virtual DbSet <Product> Products {get; set;}
      public  DbSet <Order> Orders {get; set;}
      public virtual DbSet <Comment> Comments {get; set;}
      public virtual DbSet <ShoppingCart> ShoppingCarts {get; set;}
+
      public virtual DbSet <CartItem> CartItems {get; set;}
 
      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
@@ -44,6 +40,6 @@ namespace OnlineStoreProject.Data.DataContext
         //modelBuilder.Entity<Comment>()
             //..Property(Comment => Comment.).HasDefaultValue()
     }
-*/
+    */
     }
 }
