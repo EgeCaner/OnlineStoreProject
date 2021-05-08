@@ -9,8 +9,8 @@ using OnlineStoreProject.Data.DataContext;
 namespace OnlineStoreProject.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210505102735_CartItems")]
-    partial class CartItems
+    [Migration("20210506150646_UserRoles")]
+    partial class UserRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,9 +19,43 @@ namespace OnlineStoreProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.5");
 
+            modelBuilder.Entity("OnlineStoreProject.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ShoppingCartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShoppingCartId");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("OnlineStoreProject.Models.Comment", b =>
                 {
-                    b.Property<int>("commentId")
+                    b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -34,16 +68,16 @@ namespace OnlineStoreProject.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int?>("Like")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isApproved")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("commentId");
+                    b.HasKey("CommentId");
 
                     b.ToTable("Comments");
                 });
@@ -72,6 +106,12 @@ namespace OnlineStoreProject.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("longtext")
+                        .HasDefaultValue("Customer");
+
                     b.Property<string>("Surname")
                         .HasColumnType("longtext");
 
@@ -86,6 +126,38 @@ namespace OnlineStoreProject.Migrations
                     b.HasIndex("CartId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("OnlineStoreProject.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.Product", b =>
@@ -161,33 +233,13 @@ namespace OnlineStoreProject.Migrations
                     b.ToTable("ShoppingCarts");
                 });
 
-            modelBuilder.Entity("onlinestoreproject_be.Models.Order", b =>
+            modelBuilder.Entity("OnlineStoreProject.Models.CartItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("OnlineStoreProject.Models.ShoppingCart", "ShoppingCart")
+                        .WithMany()
+                        .HasForeignKey("ShoppingCartId");
 
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders");
+                    b.Navigation("ShoppingCart");
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.Customer", b =>

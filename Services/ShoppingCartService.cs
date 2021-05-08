@@ -33,6 +33,11 @@ namespace OnlineStoreProject.Services
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
+                ShoppingCart shopCart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId() && c.IsDelete ==false);
+                if (shopCart != null)
+                {
+                    await DeleteById();
+                }
                 ShoppingCart cart = new ShoppingCart();
                 cart.UserId = GetUserId();
                 cart.CreateDate = DateTime.Now;
@@ -104,8 +109,10 @@ namespace OnlineStoreProject.Services
                         int totalPrice = 0;
                         List<CartItemDTO> products = new List<CartItemDTO>();
                         for(int i= 0; i<cartItems.Count; i++){
-                            Product product= await _context.Products.FirstOrDefaultAsync(c => c.ProductId == cartItems[i].ProductId);
+                            Product product= await _context.Products.FirstOrDefaultAsync(c => c.ProductId  == cartItems[i].ProductId);
                             CartItemDTO prod = _mapper.Map<CartItemDTO>(product);
+                            List<Comment> dbComments = await _context.Comments.Where(c => c.ProductId == product.ProductId).ToListAsync();
+                            prod.Comments = dbComments;
                             prod.Quantity = cartItems[i].Quantity;
                             prod.CartItemId= cartItems[i].Id;
                             if(prod != null){
@@ -165,11 +172,18 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<string>> DeleteCartItem(int Id)
+        public async Task<ServiceResponse<string>> DeleteCartItem(CartItem request)
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-                CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == Id);
+                ShoppingCart dbShopCart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId());
+                if (dbShopCart == null)
+                {
+                    response.Success = false;
+                    response.Message = MessageConstants.SHOPPINGCART_NOT_FOUND;
+                    return response;
+                }
+                CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.ShoppingCart.Id == dbShopCart.Id && c.ProductId == request.ProductId);
                 if(cartItem != null){
                 _context.CartItems.Remove(cartItem);
                 await _context.SaveChangesAsync();                
@@ -190,19 +204,25 @@ namespace OnlineStoreProject.Services
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-                CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == request.Id);
-                if(cartItem != null){
-                    cartItem.ModifyDate = DateTime.Now;
-                    cartItem.ProductId = request.ProductId;
-                    cartItem.Quantity = request.Quantity;
-                    cartItem.ShoppingCart = request.ShoppingCart;
-                    _context.CartItems.Update(cartItem);
-                    await _context.SaveChangesAsync();
-                    response.Message = MessageConstants.CARTITEM_UPDATE_SUCCES;
-                    response.Success = true;
-                }else{
-                    response.Message = MessageConstants.CARTITEM_NOT_FOUND;
-                    response.Success = false; 
+                ShoppingCart dbShopCart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId());
+                if(dbShopCart != null){
+                    CartItem cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.ShoppingCart.Id == dbShopCart.Id && c.ProductId == request.ProductId);
+                    if(cartItem != null){
+                        cartItem.ModifyDate = DateTime.Now;
+                        cartItem.ProductId = request.ProductId;
+                        cartItem.Quantity = request.Quantity;
+                        cartItem.ShoppingCart = dbShopCart;
+                        _context.CartItems.Update(cartItem);
+                        await _context.SaveChangesAsync();
+                        response.Message = MessageConstants.CARTITEM_UPDATE_SUCCES;
+                        response.Success = true;
+                    }else{
+                        response.Message = MessageConstants.CARTITEM_NOT_FOUND;
+                        response.Success = false; 
+                    }
+                }else {
+                    response.Message = MessageConstants.SHOPPINGCART_NOT_FOUND;
+                    response.Success =false;
                 }
             }catch(Exception e){
                 response.Message = e.Message;

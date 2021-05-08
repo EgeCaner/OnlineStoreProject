@@ -29,7 +29,7 @@ namespace OnlineStoreProject.Data.DataContext
                 .EnableDetailedErrors();
      }
     protected override void OnModelCreating(ModelBuilder modelBuilder){
-            modelBuilder.Entity<Customer>().Property(c => c.Role).HasDefaultValue("Customer");
+            //modelBuilder.Entity<Customer>().Property(c => c.Role).HasDefaultValue("Customer");
     }
     }
 }

@@ -220,11 +220,15 @@ namespace OnlineStoreProject.Services
         {
             ServiceResponse<List<Comment>> response = new ServiceResponse<List<Comment>>();
             try{
-            List<Comment> comment = await _context.Comments.Where(c => c.ProductId == Id).ToListAsync();
-            response.Data= (comment.Select(c => _mapper.Map<Comment>(c))).ToList();
+            List<Comment> comment = await _context.Comments.Where(c => c.ProductId == Id && c.IsApproved == true).ToListAsync();
+            if (comment.Count >0){
+            response.Data= comment;
             response.Message ="Ok";
             response.Success = true;
-
+            }else{
+                response.Message = MessageConstants.COMMENT_NOT_FOUND;
+                response.Success = false;
+            }
             }catch(Exception e){
                 response.Success= false;
                 response.Message = e.Message;

@@ -11,9 +11,9 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<ShoppingCartDTO>> GetCartById();
         Task<ServiceResponse<string>> AddCartItem(CartItem request);
         Task<ServiceResponse<string>> DeleteById();
-        Task<ServiceResponse<string>> DeleteCartItem(int id);
+        Task<ServiceResponse<string>> DeleteCartItem(CartItem request);
         Task<ServiceResponse<string>> UpdateCartItem(CartItem request);
 
-        
+
     }
 }

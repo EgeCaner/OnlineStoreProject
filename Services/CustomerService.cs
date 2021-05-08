@@ -29,6 +29,7 @@ namespace OnlineStoreProject.Services.CustomerService
         }
         
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        private string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
         public async Task<ServiceResponse<List<CustomerDTO>>> GetAllCustomers(){
             ServiceResponse<List<CustomerDTO>> response = new ServiceResponse<List<CustomerDTO>>();
             try{

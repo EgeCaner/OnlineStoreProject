@@ -124,7 +124,7 @@ namespace OnlineStoreProject.Migrations
 
             modelBuilder.Entity("OnlineStoreProject.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -164,7 +164,7 @@ namespace OnlineStoreProject.Migrations
                     b.Property<string>("WarrantyStatus")
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId");
 
                     b.ToTable("Products");
                 });

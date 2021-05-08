@@ -70,9 +70,9 @@ namespace OnlineStoreProject.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("DeleteCartItem/{id}")]
-        public async Task<IActionResult> DeleteCartItem(int Id){
-            ServiceResponse<string> response = await _shoppingCartService.DeleteCartItem(Id);
+        [HttpDelete("DeleteCartItem")]
+        public async Task<IActionResult> DeleteCartItem(CartItem request){
+            ServiceResponse<string> response = await _shoppingCartService.DeleteCartItem(request);
             if (!response.Success)
             {
                 return BadRequest(response);
