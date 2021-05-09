@@ -40,5 +40,6 @@ namespace OnlineStoreProject.OnlineStoreConstants.MessageConstants
         public const string COMMENT_APPROVE_SUCCESS = "Comment approved succesfuly";
         public const string COMMENT_REJECT_SUCCESS = "Comment reject succesfuly";
         public const string COMMENT_NOT_FOUND = "Comment not found";
+        public const string ORDER_PRODUCT_QUANTITY_INEFFICIENT = "Product stock is not enought to satisfy the order quantity";
     }
 }

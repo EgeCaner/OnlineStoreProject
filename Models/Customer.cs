@@ -13,7 +13,7 @@ namespace OnlineStoreProject.Models
         public byte[] PasswordSalt {get; set;} = null;    
         public int TaxId {get; set;}
         public ShoppingCart Cart {get; set;} = null;    
-        /*[Required]
-         public string Role {get; set;}*/
+        [Required]
+         public string Role {get; set;}
     }
 }

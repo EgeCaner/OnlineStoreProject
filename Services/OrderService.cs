@@ -54,15 +54,18 @@ namespace OnlineStoreProject.Services
                 if(request.Quantity > 0 && ((product.Quantity - request.Quantity) >= 0) ){
                 product.Quantity = product.Quantity - request.Quantity;
                 _context.Products.Update(product);
-                }        
                 Order Order = _mapper.Map<Order>(request);
                 Order.CreateDate = DateTime.Now;
                 Order.CustomerId = GetUserId();
-
                 await _context.Orders.AddAsync(Order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
                 response.Message = MessageConstants.ORDER_ADD_SUCCES;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.ORDER_PRODUCT_QUANTITY_INEFFICIENT;
+                }
+
             }catch(Exception e){
                 response.Success = false;
                 response.Message = e.Message;
