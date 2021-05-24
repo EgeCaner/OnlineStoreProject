@@ -176,7 +176,7 @@ namespace OnlineStoreProject.Services
                     return response;
                 }
 
-                order.Status = MessageConstants.PENDING_REFUND;
+                order.Status = 4;
                 order.ModifyDate = DateTime.Now;
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
@@ -195,7 +195,7 @@ namespace OnlineStoreProject.Services
             ServiceResponse<List<OrderDTO>> response = new ServiceResponse<List<OrderDTO>>();
             try{
                 
-                List<Order> dbOrders = await _context.Orders.Where(c => c.Status == "Pending Refund").ToListAsync();
+                List<Order> dbOrders = await _context.Orders.Where(c => c.Status == 4).ToListAsync();
                 if (dbOrders != null){
                     response.Success = true;
                     response.Data = (dbOrders.Select(c => _mapper.Map<OrderDTO>(c))).ToList();
