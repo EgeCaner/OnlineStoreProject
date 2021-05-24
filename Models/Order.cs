@@ -12,6 +12,6 @@ namespace OnlineStoreProject.Models
         public string Address {get; set;}
         public Nullable<DateTime> CreateDate { get;  set; }
         public decimal Price {get; set;}
-        public Nullable<DateTime> ModiftDate { get;  set; }
+        public Nullable<DateTime> ModifyDate { get;  set; }
     }
 }

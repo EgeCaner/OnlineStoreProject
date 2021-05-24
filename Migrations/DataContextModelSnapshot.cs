@@ -141,7 +141,7 @@ namespace OnlineStoreProject.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ModiftDate")
+                    b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Price")

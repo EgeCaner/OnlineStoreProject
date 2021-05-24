@@ -9,8 +9,8 @@ using OnlineStoreProject.Data.DataContext;
 namespace OnlineStoreProject.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210524021519_Discount")]
-    partial class Discount
+    [Migration("20210524161220_OrderModifyDate")]
+    partial class OrderModifyDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,7 +143,7 @@ namespace OnlineStoreProject.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ModiftDate")
+                    b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Price")

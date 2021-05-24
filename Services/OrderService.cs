@@ -89,7 +89,7 @@ namespace OnlineStoreProject.Services
                 order.Status = request.Status;
                 order.Quantity = request.Quantity;
                 order.Price= request.Price;
-                order.CreateDate = DateTime.Now;
+                order.ModifyDate = DateTime.Now;
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
@@ -177,7 +177,7 @@ namespace OnlineStoreProject.Services
                 }
 
                 order.Status = MessageConstants.PENDING_REFUND;
-                order.ModiftDate = DateTime.Now;
+                order.ModifyDate = DateTime.Now;
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
