@@ -68,12 +68,14 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<ProductDTO>> GetProductById(int Id){
             ServiceResponse<ProductDTO> response = new ServiceResponse<ProductDTO>();
             try{
-            List<Comment> comment = await _context.Comments.Where(c => c.ProductId == Id).ToListAsync();
+            List<Comment> comment = await _context.Comments.Where(c => c.ProductId == Id && c.IsApproved == true).ToListAsync();
             Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id);
-            response.Data =  _mapper.Map<ProductDTO>(dbProduct);
-            response.Data.Comments = comment;
-            response.Message = "Ok";
-            response.Success=true;
+                if(dbProduct != null){
+                response.Data =  _mapper.Map<ProductDTO>(dbProduct);
+                response.Data.Comments = comment;
+                response.Message = "Ok";
+                response.Success=true;
+                }
             }catch(Exception e){
                 response.Success= false;
                 response.Message = e.Message;
@@ -169,9 +171,7 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-
-    
-         public async Task<ServiceResponse<string>> AddComment(Comment request)
+        public async Task<ServiceResponse<string>> AddComment(Comment request)
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
@@ -187,8 +187,7 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-
-         public async Task<ServiceResponse<Comment>> UpdateComment(Comment request){
+        public async Task<ServiceResponse<Comment>> UpdateComment(Comment request){
             ServiceResponse<Comment> response = new ServiceResponse<Comment>();
             try{
                 Comment comment = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == request.CommentId);
@@ -214,7 +213,6 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-
 
         public async Task<ServiceResponse<List<Comment>>> GetAllComments(int Id)
         {
@@ -270,6 +268,13 @@ namespace OnlineStoreProject.Services
                 comment.IsApproved = true;
                 _context.Comments.Update(comment);
                 await _context.SaveChangesAsync();
+                double? rating = _context.Comments.Where(c => c.ProductId == comment.ProductId && c.IsApproved == true).Average(c => c.Like);
+                Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == comment.ProductId);
+                if(dbProduct != null){
+                    dbProduct.Rating = rating;
+                    _context.Products.Update(dbProduct);
+                    await _context.SaveChangesAsync();
+                }
                 response.Message= MessageConstants.COMMENT_APPROVE_SUCCESS;
                 response.Success = true;
                 }else{
@@ -299,6 +304,25 @@ namespace OnlineStoreProject.Services
             }catch(Exception e){
                 response.Message = e.Message;
                 response.Success = false;
+            }
+            return response;
+        }     
+
+        public async Task<ServiceResponse<List<Comment>>> GetUnApprovedComments(){
+            ServiceResponse<List<Comment>> response = new ServiceResponse<List<Comment>>();
+            try{
+                List<Comment> dbComments = await _context.Comments.Where(c => c.IsApproved ==false).ToListAsync();
+                if (dbComments != null){
+                    response.Success = true;
+                    response.Message = "Ok";
+                    response.Data = dbComments;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.COMMENT_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Success = false;
+                response.Message = e.Message;
             }
             return response;
         }

@@ -68,6 +68,15 @@ namespace OnlineStoreProject.Controllers.CustomerController
             }
             return Ok(response);
         }
-
-   }
+        
+        [HttpGet("GetRole")]
+        public async Task<IActionResult> GetRole(){
+            ServiceResponse<string> response = await _customerService.GetRole();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+    }
 }

@@ -39,20 +39,25 @@ namespace OnlineStoreProject.Services.AuthenticationService
         {
              AuthenticationResponse<string> response = new AuthenticationResponse<string>();
             try{
-                if (await UserExists(request.Username))
-                {
-                    response.Success = false;
-                    response.Message = MessageConstants.USER_EXIST;  
-                    return response;
-                }
-                onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-                Customer user = new Customer{Name=request.Name,Surname= request.Surname,Username= request.Username, 
-                MailAddress=request.MailAddress,PhoneNumber= request.PhoneNumber, PasswordHash = passwordHash,PasswordSalt=passwordSalt};
+                if(request.Username!= null && request.Password !=null){
+                    if (await UserExists(request.Username))
+                    {
+                        response.Success = false;
+                        response.Message = MessageConstants.USER_EXIST;  
+                        return response;
+                    }
+                    onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                    Customer user = new Customer{Name=request.Name,Surname= request.Surname,Username= request.Username, 
+                    MailAddress=request.MailAddress,PhoneNumber= request.PhoneNumber, PasswordHash = passwordHash,PasswordSalt=passwordSalt};
 
-                await _context.Customers.AddAsync(user);
-                await _context.SaveChangesAsync();
-                response.Success=true;
-                response.Message= MessageConstants.USER_REGISTERED;
+                    await _context.Customers.AddAsync(user);
+                    await _context.SaveChangesAsync();
+                    response.Success=true;
+                    response.Message= MessageConstants.USER_REGISTERED;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.USERNAME_OR_PASSWORD_NULL;
+                }
             }catch(Exception e){
                 response.Success= false;
                 response.Message =MessageConstants.USER_REGISTER_FAIL;
@@ -64,19 +69,24 @@ namespace OnlineStoreProject.Services.AuthenticationService
         {
             AuthenticationResponse<string> response = new AuthenticationResponse<string>();
             try{
-                Customer customer = await _context.Customers.FirstOrDefaultAsync( c => c.Username.ToLower().Equals(request.Username.ToLower()));
-                if(customer == null){
-                    response.Success= false;
-                    response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
-                }
-                else if (!VerifyPasswordHash(request.Password,customer.PasswordHash,customer.PasswordSalt)){
-                    response.Success= false;
-                    response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
-                }
-                else{
-                    response.Success= true;
-                    response.Message=MessageConstants.USER_LOGIN_SUCCESS;
-                    response.Data = GenerateToken(customer);
+                if(request.Username != null &&  request.Password != null){
+                    Customer customer = await _context.Customers.FirstOrDefaultAsync( c => c.Username.ToLower().Equals(request.Username.ToLower()));
+                    if(customer == null){
+                        response.Success= false;
+                        response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
+                    }
+                    else if (!VerifyPasswordHash(request.Password,customer.PasswordHash,customer.PasswordSalt)){
+                        response.Success= false;
+                        response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
+                    }
+                    else{
+                        response.Success= true;
+                        response.Message=MessageConstants.USER_LOGIN_SUCCESS;
+                        response.Data = GenerateToken(customer);
+                    }
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.USERNAME_OR_PASSWORD_NULL;
                 }
             }catch(Exception e){
                 response.Success = false;
@@ -114,7 +124,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                //new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(
@@ -164,6 +174,5 @@ namespace OnlineStoreProject.Services.AuthenticationService
             }
             return response;
         }
-
     }
 }

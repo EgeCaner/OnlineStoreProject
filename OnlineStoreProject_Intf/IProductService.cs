@@ -20,6 +20,7 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<List<Comment>>> GetAllComments(int Id);
         Task<ServiceResponse<string>> DeleteCommentById(int Id);
         Task<ServiceResponse<string>> ApproveComment(int Id);
-        Task<ServiceResponse<string>> RejectComment(int Id);    
+        Task<ServiceResponse<string>> RejectComment(int Id); 
+        Task<ServiceResponse<List<Comment>>> GetUnApprovedComments();   
     }
 }

@@ -162,5 +162,15 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+
+        [HttpGet("GetUnApprovedComments")]
+        public async Task<IActionResult> GetUnApprovedComments(){
+            ServiceResponse<List<Comment>> response = await _productService.GetUnApprovedComments();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

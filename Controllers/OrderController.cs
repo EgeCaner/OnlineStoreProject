@@ -56,9 +56,28 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+
         [HttpPut("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(OrderDTO request){
             ServiceResponse<string> response = await _orderService.ChangeOrderStatus(request);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPut("Refund")]
+        public async Task<IActionResult> Refund(int orderId){
+            ServiceResponse<string> response = await _orderService.Refund(orderId);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("GetPendingRefunds")]
+        public async Task<IActionResult> GetPendingRefunds(){
+            ServiceResponse<List<OrderDTO>> response = await _orderService.GetPendingRefunds();
             if (!response.Success){
                 return BadRequest(response);
             }

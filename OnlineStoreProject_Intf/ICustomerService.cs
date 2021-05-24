@@ -11,5 +11,6 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<CustomerDTO>> GetCustomerById();
         Task<ServiceResponse<string>> DeleteUser();
         Task<ServiceResponse<CustomerDTO>> UpdateUser(CustomerDTO request);
+        Task<ServiceResponse<string>> GetRole();
     }
 }

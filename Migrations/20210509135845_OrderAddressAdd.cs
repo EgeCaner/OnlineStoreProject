@@ -6,11 +6,6 @@ namespace OnlineStoreProject.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "Products",
-                newName: "ProductId");
-
             migrationBuilder.AlterColumn<string>(
                 name: "Role",
                 table: "Customers",
@@ -23,11 +18,6 @@ namespace OnlineStoreProject.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ProductId",
-                table: "Products",
-                newName: "Id");
-
             migrationBuilder.AlterColumn<string>(
                 name: "Role",
                 table: "Customers",

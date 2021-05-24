@@ -11,9 +11,9 @@ namespace OnlineStoreProject.Models
         public string MailAddress { get; set; } = null;
         public byte[] PasswordHash { get; set;} = null;
         public byte[] PasswordSalt {get; set;} = null;    
-        public int TaxId {get; set;}
+        public int TaxId {get; set;} = -1;
         public ShoppingCart Cart {get; set;} = null;    
         [Required]
-         public string Role {get; set;}
+         public string Role {get; set;} =  "Customer";
     }
 }

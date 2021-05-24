@@ -15,5 +15,7 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<List<OrderDTO>>> GetOrdersByUserId();
         Task<ServiceResponse<string>> DeleteOrderById(int Id);
         Task<ServiceResponse<string>> ChangeOrderStatus(OrderDTO request);
+        Task<ServiceResponse<string>> Refund(int orderId);
+        Task<ServiceResponse<List<OrderDTO>>> GetPendingRefunds();
     }
 }

@@ -34,10 +34,14 @@ namespace OnlineStoreProject.Services
             ServiceResponse<List<OrderDTO>> response = new ServiceResponse<List<OrderDTO>>();
             try{
             List<Order> dbOrders = await _context.Orders.ToListAsync();
+            if(dbOrders != null){
             response.Data= (dbOrders.Select(c => _mapper.Map<OrderDTO>(c))).ToList();
             response.Message ="Ok";
             response.Success = true;
-
+            }else{
+                response.Success = false;
+                response.Message = MessageConstants.ORDER_NOT_FOUND;
+            }
             }catch(Exception e){
                 response.Success= false;
                 response.Message = e.Message;
@@ -78,7 +82,7 @@ namespace OnlineStoreProject.Services
                 Order order = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (order == null){
                     response.Success = false;
-                    response.Message = MessageConstants.ORDER_NOT_FOUND;//Change the message
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;
                     return response;
                 }
 
@@ -89,7 +93,7 @@ namespace OnlineStoreProject.Services
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
-                response.Message = MessageConstants.ORDER_UPDATE_SUCCES;//change to order message
+                response.Message = MessageConstants.ORDER_UPDATE_SUCCES;
 
 
             }catch(Exception e){
@@ -161,5 +165,50 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
+
+        public async Task<ServiceResponse<string>> Refund(int orderId){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Order order = await _context.Orders.FirstOrDefaultAsync(c => c.Id == orderId && c.CustomerId == GetUserId());
+                if (order == null){
+                    response.Success = false;
+                    response.Message = MessageConstants.ORDER_NOT_FOUND;
+                    return response;
+                }
+
+                order.Status = MessageConstants.PENDING_REFUND;
+                order.ModiftDate = DateTime.Now;
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Message = MessageConstants.ORDER_UPDATE_SUCCES;
+
+
+            }catch(Exception e){
+                response.Success = false;
+                response.Message= e.Message;
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<OrderDTO>>> GetPendingRefunds(){
+            ServiceResponse<List<OrderDTO>> response = new ServiceResponse<List<OrderDTO>>();
+            try{
+                
+                List<Order> dbOrders = await _context.Orders.Where(c => c.Status == "Pending Refund").ToListAsync();
+                if (dbOrders != null){
+                    response.Success = true;
+                    response.Data = (dbOrders.Select(c => _mapper.Map<OrderDTO>(c))).ToList();
+                    response.Message = "Ok";
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.ORDER_NOT_FOUND; 
+                }
+            }catch(Exception e){
+                response.Message = e.Message;
+                response.Success = false;
+            }
+            return response;
+        } 
     }
 }

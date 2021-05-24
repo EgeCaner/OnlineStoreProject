@@ -8,9 +8,10 @@ namespace OnlineStoreProject.Models
         public int Quantity{get; set;}
         public int ProductId{get;set;}
         public int CustomerId{get; set;}
-        public int Status{get; set;}
+        public string Status{get; set;} = "Processing"; 
         public string Address {get; set;}
         public Nullable<DateTime> CreateDate { get;  set; }
         public decimal Price {get; set;}
+        public Nullable<DateTime> ModiftDate { get;  set; }
     }
 }

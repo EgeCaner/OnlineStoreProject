@@ -15,6 +15,6 @@ namespace OnlineStoreProject.Models
         public Nullable<bool> IsDelete {get; set;} = false;
         public Nullable<double> Rating{get; set;} = null;
         public Nullable<decimal> Price{get; set;} = null;
-        public string WarrantyStatus {get; set;} =null;
+        public string WarrantyStatus {get; set;} = "Two year warranty";
     }
 }

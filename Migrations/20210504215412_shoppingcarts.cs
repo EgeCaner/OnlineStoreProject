@@ -8,11 +8,6 @@ namespace OnlineStoreProject.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ProductId",
-                table: "Products",
-                newName: "Id");
-
             migrationBuilder.AddColumn<int>(
                 name: "ProductDTOId",
                 table: "Comments",

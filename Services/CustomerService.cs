@@ -34,10 +34,14 @@ namespace OnlineStoreProject.Services.CustomerService
             ServiceResponse<List<CustomerDTO>> response = new ServiceResponse<List<CustomerDTO>>();
             try{
             List<Customer> dbCustomers = await _context.Customers.ToListAsync();
-            response.Data= (dbCustomers.Select(c => _mapper.Map<CustomerDTO>(c))).ToList();
-            response.Message ="Ok";
-            response.Success = true;
-
+            if(dbCustomers !=null){
+                response.Data= (dbCustomers.Select(c => _mapper.Map<CustomerDTO>(c))).ToList();
+                response.Message ="Ok";
+                response.Success = true;
+            }else{
+                response.Success= false;
+                response.Message = MessageConstants.USER_NOT_FOUND;
+            }
             }catch(Exception e){
                 response.Success= false;
                 response.Message = e.Message;
@@ -107,6 +111,24 @@ namespace OnlineStoreProject.Services.CustomerService
             }catch(Exception e){
                 response.Success = false;
                 response.Message = e.Message;
+            }
+            return response;
+        }
+        public async Task<ServiceResponse<string>> GetRole(){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Customer dbCust = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
+                if(dbCust != null){
+                    response.Success=true;
+                    response.Message= "Ok";
+                    response.Data = dbCust.Role;
+                }else{
+                    response.Success = false;
+                    response.Message = MessageConstants.USER_NOT_FOUND;
+                }
+            }catch(Exception e){
+                response.Message= e.Message;
+                response.Success= false;
             }
             return response;
         }
