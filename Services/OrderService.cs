@@ -90,11 +90,22 @@ namespace OnlineStoreProject.Services
                     response.Message = MessageConstants.ORDER_NOT_FOUND;
                     return response;
                 }
+                
+                if(order.Status == 0 && request.Status ==6){
+                    order.Status =6;
 
-                order.Status = request.Status;
+                }else if(request.Status ==6){
+                        response.Success = false;
+                        response.Message = MessageConstants.ORDER_CANCEL_FAIL;
+                        return response;
+                }else{
+                    order.Status = request.Status;
+                }
+                
                 order.Quantity = request.Quantity;
                 order.Price= request.Price;
                 order.ModifyDate = DateTime.Now;
+                order.Address = request.Address;
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
                 response.Success = true;
@@ -155,12 +166,14 @@ namespace OnlineStoreProject.Services
             try{
                 Order dbOrder = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (dbOrder != null){
-                    dbOrder.Status = request.Status;
                     if (request.Status == 5){
                         Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
                         dbProduct.Quantity += request.Quantity;
+                        dbOrder.Status = request.Status;
                         _context.Products.Update(dbProduct); 
 
+                    }else{
+                        dbOrder.Status = request.Status;
                     }
                     _context.Orders.Update(dbOrder);
                     await _context.SaveChangesAsync();
@@ -221,5 +234,16 @@ namespace OnlineStoreProject.Services
             }
             return response;
         } 
+
+        public async Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end){
+            ServiceResponse<List<decimal>> response = new ServiceResponse<List<decimal>>();
+            if(false){
+                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 6 && c.Status !=5).ToListAsync();
+
+            }
+            response.Success =false;
+            response.Message = MessageConstants.METHOD_NOT_IMPLEMENTED;
+            return response;
+        }
     }
 }

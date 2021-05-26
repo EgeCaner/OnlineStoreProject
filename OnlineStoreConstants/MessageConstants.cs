@@ -43,5 +43,7 @@ namespace OnlineStoreProject.OnlineStoreConstants.MessageConstants
         public const string ORDER_PRODUCT_QUANTITY_INEFFICIENT = "Product stock is not enought to satisfy the order quantity";
         public const string USERNAME_OR_PASSWORD_NULL= "Username or Password is null";
         public const string PENDING_REFUND = "Pending Refund";
+        public const string ORDER_CANCEL_FAIL = "Order cancel failed you can only cancel order if it is in processing you can refund instead of cancel";
+        public const string METHOD_NOT_IMPLEMENTED = "Method not implemented";
     }
 }

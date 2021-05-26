@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using OnlineStoreProject.DTOs;
 using OnlineStoreProject.Response;
 using System.Collections.Generic;
+using System;
 
 
 
@@ -17,5 +18,6 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<string>> ChangeOrderStatus(OrderDTO request);
         Task<ServiceResponse<string>> Refund(int orderId);
         Task<ServiceResponse<List<OrderDTO>>> GetPendingRefunds();
+        Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end);
     }
 }
