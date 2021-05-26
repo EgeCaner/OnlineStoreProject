@@ -125,8 +125,8 @@ namespace OnlineStoreProject.Services
                 product.Price = request.Price;
                 product.Quantity = request.Quantity;
                 product.WarrantyStatus = request.WarrantyStatus;
-                product.DiscountRate = request.Discount;
-                product.DiscountedPrice = request.Price * (1-request.Discount);
+                product.DiscountRate = request.DiscountRate;
+                product.DiscountedPrice = request.Price * (1-request.DiscountRate);
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
                 response.Success = true;
@@ -144,7 +144,7 @@ namespace OnlineStoreProject.Services
         {
             ServiceResponse<List<ProductDTO>> response = new ServiceResponse<List<ProductDTO>>();
             try{
-            List<Product> dbProducts = await _context.Products.Where(c=>c.CategoryId == Id).ToListAsync();
+            List<Product> dbProducts = await _context.Products.Where(c=>c.CategoryId == Id && c.IsDelete == false).ToListAsync();
             response.Data= (dbProducts.Select(c => _mapper.Map<ProductDTO>(c))).ToList();
             response.Message ="Ok";
             response.Success = true;
