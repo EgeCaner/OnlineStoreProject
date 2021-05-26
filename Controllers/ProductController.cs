@@ -172,5 +172,15 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+
+        [HttpDelete("DeletePermanent/{id}")]
+        public async Task<IActionResult> DeletePermanent(int Id){
+            ServiceResponse<string> response = await _productService.DeleteProduct(Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

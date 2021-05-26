@@ -34,7 +34,7 @@ namespace OnlineStoreProject.Services
         {
             ServiceResponse<List<ProductDTO>> response = new ServiceResponse<List<ProductDTO>>();
             try{
-            List<Product> dbProducts = await _context.Products.ToListAsync();
+            List<Product> dbProducts = await _context.Products.Where(c => c.IsDelete == false).ToListAsync();
             response.Data= (dbProducts.Select(c => _mapper.Map<ProductDTO>(c))).ToList();
             response.Message ="Ok";
             response.Success = true;
@@ -69,7 +69,7 @@ namespace OnlineStoreProject.Services
             ServiceResponse<ProductDTO> response = new ServiceResponse<ProductDTO>();
             try{
             List<Comment> comment = await _context.Comments.Where(c => c.ProductId == Id && c.IsApproved == true).ToListAsync();
-            Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id);
+            Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id && c.IsDelete == false);
                 if(dbProduct != null){
                 response.Data =  _mapper.Map<ProductDTO>(dbProduct);
                 response.Data.Comments = comment;
@@ -84,7 +84,7 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<string>> DeleteProductById(int Id){
+        public async Task<ServiceResponse<string>> DeleteProduct(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
                 Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id);
@@ -124,6 +124,9 @@ namespace OnlineStoreProject.Services
                 product.ModifyDate = DateTime.Now;
                 product.Price = request.Price;
                 product.Quantity = request.Quantity;
+                product.WarrantyStatus = request.WarrantyStatus;
+                product.DiscountRate = request.Discount;
+                product.DiscountedPrice = request.Price * (1-request.Discount);
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
                 response.Success = true;
@@ -326,5 +329,31 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
+
+         public async Task<ServiceResponse<string>> DeleteProductById(int Id){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id);
+                if (product != null)
+                {   
+                    product.IsDelete = true;
+                    _context.Products.Update(product);
+                    await _context.SaveChangesAsync();
+                    response.Success = true;
+                    response.Message = MessageConstants.PRODUCT_DELETE_SUCCESS;
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = MessageConstants.PRODUCT_NOT_FOUND;
+                }
+            }
+            catch(Exception e)
+            {
+                response.Success = false;
+                response.Message= e.Message;
+            }
+            return response;
+        } 
     }
 }

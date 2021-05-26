@@ -22,5 +22,6 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<string>> ApproveComment(int Id);
         Task<ServiceResponse<string>> RejectComment(int Id); 
         Task<ServiceResponse<List<Comment>>> GetUnApprovedComments();   
+        Task<ServiceResponse<string>> DeleteProduct(int Id);
     }
 }

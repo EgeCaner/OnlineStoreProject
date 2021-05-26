@@ -62,6 +62,11 @@ namespace OnlineStoreProject.Services
                 Order.CreateDate = DateTime.Now;
                 Order.CustomerId = GetUserId();
                 await _context.Orders.AddAsync(Order);
+                ShoppingCart dbCart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId());
+                if (dbCart !=null){
+                CartItem dbCartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.ShoppingCart == dbCart && c.ProductId == request.ProductId);
+                _context.CartItems.Remove(dbCartItem);
+                }
                 await _context.SaveChangesAsync();
                 response.Success = true;
                 response.Message = MessageConstants.ORDER_ADD_SUCCES;
@@ -151,6 +156,12 @@ namespace OnlineStoreProject.Services
                 Order dbOrder = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (dbOrder != null){
                     dbOrder.Status = request.Status;
+                    if (request.Status == 5){
+                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
+                        dbProduct.Quantity += request.Quantity;
+                        _context.Products.Update(dbProduct); 
+
+                    }
                     _context.Orders.Update(dbOrder);
                     await _context.SaveChangesAsync();
                     response.Message= MessageConstants.ORDER_UPDATE_SUCCES;

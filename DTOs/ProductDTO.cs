@@ -17,6 +17,7 @@ namespace OnlineStoreProject.DTOs
         public Nullable<decimal> Price{get; set;}= null;        
         public List<Comment> Comments{get; set;} = null;
         public decimal Discount {get; set;} = 0;
-        public int WarrantyStatus {get; set;}
+        public string WarrantyStatus {get; set;} = "Two years of warranty";
+        public decimal DiscountedPrice {get; set;}
     }
 }
