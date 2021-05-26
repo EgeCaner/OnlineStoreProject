@@ -104,6 +104,7 @@ namespace OnlineStoreProject.Services.CustomerService
                 customer.Surname = request.Surname;
                 customer.MailAddress = request.MailAddress;
                 customer.PhoneNumber = request.PhoneNumber;
+                customer.Address = request.Address;
                 _context.Customers.Update(customer);
                 await _context.SaveChangesAsync();
                 response.Success = true;

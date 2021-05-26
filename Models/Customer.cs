@@ -14,6 +14,7 @@ namespace OnlineStoreProject.Models
         public int TaxId {get; set;} = -1;
         public ShoppingCart Cart {get; set;} = null;    
         [Required]
-         public string Role {get; set;} =  "Customer";
+        public string Role {get; set;} =  "Customer";
+        public string Address {get; set;} = null;
     }
 }
