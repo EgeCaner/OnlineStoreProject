@@ -21,12 +21,14 @@ namespace OnlineStoreProject.Services
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMailService _mailService;
 
-        public OrderService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
+        public OrderService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor, IMailService mailService)
         {
             _mapper = mapper;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _mailService = mailService;
         }
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrders()
@@ -97,6 +99,7 @@ namespace OnlineStoreProject.Services
                     dbProduct.Quantity += request.Quantity;
                     order.Status = request.Status;
                     _context.Products.Update(dbProduct); 
+                    await _mailService.ProductCancelled(GetUserId(), order.Id);
                 }else if(request.Status ==3){
                         response.Success = false;
                         response.Message = MessageConstants.ORDER_CANCEL_FAIL;
@@ -174,7 +177,13 @@ namespace OnlineStoreProject.Services
                         dbProduct.Quantity += request.Quantity;
                         dbOrder.Status = request.Status;
                         _context.Products.Update(dbProduct); 
-
+                        await _mailService.ProductRefunded(GetUserId(), dbOrder.Id);
+                    }else if(request.Status == 1){
+                        dbOrder.Status = request.Status;
+                        await _mailService.ProductInTransit(GetUserId(), dbOrder.Id);
+                    }else if(request.Status == 2){
+                        dbOrder.Status = request.Status;
+                        await _mailService.ProductDelivered(GetUserId(), dbOrder.Id);
                     }else{
                         dbOrder.Status = request.Status;
                     }

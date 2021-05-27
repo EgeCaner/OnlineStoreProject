@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using OnlineStoreProject_Intf.IAuthenticationService;
+using OnlineStoreProject_Intf;
 using OnlineStoreProject.Response.AuthenticationResponse;
 using OnlineStoreProject.Request.UserLoginRequest;
 using OnlineStoreProject.Request.UserRegisterRequest;
@@ -16,7 +17,7 @@ using OnlineStoreProject.OnlineStoreConstants.MessageConstants;
 using OnlineStoreProject.Data.DataContext;
 using OnlineStoreProject.Request.ChangePasswordRequest;
 using Microsoft.AspNetCore.Http;
-using onlinestoreproject_be.Services;
+using OnlineStoreProject.Services;
 
 namespace OnlineStoreProject.Services.AuthenticationService
 {
@@ -25,12 +26,14 @@ namespace OnlineStoreProject.Services.AuthenticationService
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMailService _mailService;
 
-        public AuthenticationService(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AuthenticationService(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMailService mailService)
         {
             _configuration= configuration;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _mailService = mailService;
         }
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -59,6 +62,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
                     dbCart.ModifyDate = DateTime.Now;         
                     await _context.ShoppingCarts.AddAsync(dbCart);
                     await _context.SaveChangesAsync();
+                    await _mailService.RegisterMail(request.Username);
                     response.Success=true;
                     response.Message= MessageConstants.USER_REGISTERED;
                 }else{

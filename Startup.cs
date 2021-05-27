@@ -74,6 +74,7 @@ namespace OnlineStoreProject
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            services.AddScoped<IMailService, MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
