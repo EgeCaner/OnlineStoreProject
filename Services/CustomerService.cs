@@ -133,5 +133,27 @@ namespace OnlineStoreProject.Services.CustomerService
             }
             return response;
         }
+
+         public async Task<ServiceResponse<string>> ChangeAddress(CustomerDTO request){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Customer customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
+                if (customer ==null){
+                    response.Success = false;
+                    response.Message = MessageConstants.USER_UPDATE_FAIL;
+                    return response;
+                }
+
+                customer.Address = request.Address;
+                _context.Customers.Update(customer);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Message = MessageConstants.USER_UPDATE_SUCCESS;
+            }catch(Exception e){
+                response.Success = false;
+                response.Message = e.Message;
+            }
+            return response;
+        }
     }
 }

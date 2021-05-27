@@ -78,5 +78,16 @@ namespace OnlineStoreProject.Controllers.CustomerController
             }
             return Ok(response);
         }
+
+        [HttpPut("ChangeAddress")]
+        public async Task<IActionResult> ChangeAddress(CustomerDTO request){
+            ServiceResponse<string> response = await _customerService.ChangeAddress(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+
+        }
     }
 }

@@ -91,10 +91,13 @@ namespace OnlineStoreProject.Services
                     return response;
                 }
                 
-                if(order.Status == 0 && request.Status ==6){
-                    order.Status =6;
-
-                }else if(request.Status ==6){
+                if(order.Status == 0 && request.Status ==3){
+                    order.Status =3;
+                    Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
+                    dbProduct.Quantity += request.Quantity;
+                    order.Status = request.Status;
+                    _context.Products.Update(dbProduct); 
+                }else if(request.Status ==3){
                         response.Success = false;
                         response.Message = MessageConstants.ORDER_CANCEL_FAIL;
                         return response;
@@ -238,7 +241,7 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end){
             ServiceResponse<List<decimal>> response = new ServiceResponse<List<decimal>>();
             if(false){
-                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 6 && c.Status !=5).ToListAsync();
+                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5).ToListAsync();
 
             }
             response.Success =false;

@@ -52,6 +52,13 @@ namespace OnlineStoreProject.Services.AuthenticationService
 
                     await _context.Customers.AddAsync(user);
                     await _context.SaveChangesAsync();
+                    Customer dbCustomer =  await _context.Customers.FirstOrDefaultAsync(c => c.Username == request.Username);
+                    ShoppingCart dbCart = new ShoppingCart();        
+                    dbCart.UserId = dbCustomer.Id;
+                    dbCart.CreateDate = DateTime.Now;   
+                    dbCart.ModifyDate = DateTime.Now;         
+                    await _context.ShoppingCarts.AddAsync(dbCart);
+                    await _context.SaveChangesAsync();
                     response.Success=true;
                     response.Message= MessageConstants.USER_REGISTERED;
                 }else{
