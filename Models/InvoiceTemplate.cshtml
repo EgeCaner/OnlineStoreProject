@@ -1,0 +1,36 @@
+@model OnlineStoreProject.Models.PdfView
+
+<!DOCTYPE html>
+    <html> 
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.m,n.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.41/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <h2>Order Information</h2>
+        <div> 
+            <h1>Dear @Model.customer.Name @Model.customer.Surname invoice of your order with the date @Model.order.CreateDate</h1>
+        </div>
+        <table>
+            <tbody>
+            <tr>
+                <th>OrderID</th>
+                <th>ProductID</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Date of Order</th>
+                
+            </tr>
+            <tr>
+                <td>@Model.order.Id</td>
+                <td><img src=@Model.product.ImageUrl ></td>
+                <td>@Model.order.Quantity</td>
+                <td>@Model.order.Price</td>        
+                <td>@Model.order.CreateDate</td>
+            </tr>
+            </tbody>
+        </table>
+    </body>
+    </html>

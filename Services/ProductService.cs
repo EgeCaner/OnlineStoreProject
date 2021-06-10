@@ -330,7 +330,7 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-         public async Task<ServiceResponse<string>> DeleteProductById(int Id){
+        public async Task<ServiceResponse<string>> DeleteProductById(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
                 Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == Id);

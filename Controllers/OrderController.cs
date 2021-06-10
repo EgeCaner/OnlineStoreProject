@@ -16,9 +16,11 @@ namespace OnlineStoreProject.Controllers
         public class OrderController : ControllerBase
         {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService){
+        private readonly IMailService _mailService;
+        public OrderController(IOrderService orderService, IMailService mailService){
 
             _orderService = orderService; 
+            _mailService = mailService;
         }
         
         [HttpGet("GetAll")]
@@ -92,6 +94,15 @@ namespace OnlineStoreProject.Controllers
                 return BadRequest(response);
             }
             return Ok(response);
+        }
+        [HttpGet("PDF/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> OrderPDF(int Id){
+            ServiceResponse<IActionResult> response = await _mailService.CreatePdf(Id);
+            if (!response.Success){
+                return BadRequest(response);
+            }
+            return response.Data;
         }
     }
 }

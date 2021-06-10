@@ -15,6 +15,6 @@ namespace OnlineStoreProject.Models
         public ShoppingCart Cart {get; set;} = null;    
         [Required]
         public string Role {get; set;} =  "Customer";
-        public string Address {get; set;} = null;
+        public string Address {get; set;} = "Unknown";
     }
 }

@@ -25,6 +25,7 @@ using Swashbuckle.AspNetCore.Filters;
 using OnlineStoreProject_Intf.IAuthenticationService;
 using OnlineStoreProject.Data.DataContext;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Wkhtmltopdf.NetCore;
 
 namespace OnlineStoreProject
 {
@@ -75,6 +76,8 @@ namespace OnlineStoreProject
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddWkhtmltopdf();
+    
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

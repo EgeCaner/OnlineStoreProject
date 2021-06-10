@@ -15,8 +15,12 @@ using OnlineStoreProject.Response;
 using OnlineStoreProject_Intf;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
-
-
+using Syncfusion.Pdf;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Drawing;
+using System.IO;
+using Wkhtmltopdf.NetCore;
+using System.Text;
 namespace OnlineStoreProject.Services
 {
     public class MailService : IMailService
@@ -25,11 +29,13 @@ namespace OnlineStoreProject.Services
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public MailService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IGeneratePdf _generatePdf;
+        public MailService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor, IGeneratePdf generatePdf)
         {
             _mapper = mapper;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _generatePdf = generatePdf;
         }
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -189,6 +195,67 @@ namespace OnlineStoreProject.Services
                 response.Success = false;
                 response.Message = e.Message;
                 System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<IActionResult>> CreatePdf(int Id){
+            ServiceResponse<IActionResult> response = new ServiceResponse<IActionResult>();
+            
+            try{
+                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == Id).ToListAsync();
+                Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == dbOrder[0].CustomerId);
+                List<Product> dbProds = new List<Product>();
+                for(int i= 0; i<dbOrder.Count;i++){
+                    Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == dbOrder[i].ProductId);
+                    dbProds.Add(dbProduct);
+                }
+                
+
+                PdfView pdfView = new PdfView();
+                pdfView.customer = dbCustomer;
+                pdfView.order = dbOrder;
+                pdfView.product= dbProds;
+
+                var html = new StringBuilder();
+                html.Append(@"<html><head>");
+                html.Append(@" </head><body>");
+                html.Append(@"<h2>Order Information</h2>");
+                html.Append(@"<div> 
+            <h1>Dear "+ dbCustomer.Name+" "+dbCustomer.Surname+ @" invoice of your order with the date"+ dbOrder[0].CreateDate+@"</h1>
+        </div>");
+                html.Append(@"<table>
+            <tbody>
+            <tr>
+                <th>OrderID</th>
+                <th>Product Image</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Date of Order</th>
+                
+            </tr>");
+                for(int i=0; i<dbOrder.Count-1;i++){
+                    html.AppendFormat(@"<tr>
+                                            <td>{0}</td>
+                                            <td>{1}</td>
+                                            <td>{2}</td>
+                                            <td>{3}</td>        
+                                            <td>{4}}</td>
+                                        </tr>",dbOrder[i].Id.ToString(),dbProds[i].ImageUrl.ToString(),dbOrder[i].Quantity.ToString(), dbOrder[i].Price.ToString(), dbOrder[i].CreateDate.ToString());
+
+                }
+                html.Append(@" </tbody></table></body></html>");
+
+
+                if(dbOrder != null){
+                  response.Data = await _generatePdf.GetPdf(html.ToString());
+                  response.Success = true;
+                  response.Message = "Ok";
+                }
+            }catch(Exception e){
+                response.Success= false;
+                response.Message= e.Message;
+                System.Diagnostics.Debug.WriteLine("pdf exception");
             }
             return response;
         }

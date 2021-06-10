@@ -67,7 +67,9 @@ namespace OnlineStoreProject.Services
                 ShoppingCart dbCart = await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == GetUserId());
                 if (dbCart !=null){
                 CartItem dbCartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.ShoppingCart == dbCart && c.ProductId == request.ProductId);
+                if(dbCartItem != null){
                 _context.CartItems.Remove(dbCartItem);
+                }
                 }
                 await _context.SaveChangesAsync();
                 response.Success = true;
@@ -250,8 +252,11 @@ namespace OnlineStoreProject.Services
         public async Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end){
             ServiceResponse<List<decimal>> response = new ServiceResponse<List<decimal>>();
             if(false){
-                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5).ToListAsync();
+                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5 && c.CreateDate>= start && c.CreateDate<= end).ToListAsync();
+                if(dbOrders != null){
+                    
 
+                }
             }
             response.Success =false;
             response.Message = MessageConstants.METHOD_NOT_IMPLEMENTED;

@@ -17,6 +17,7 @@ namespace OnlineStoreProject.Models
         public Nullable<decimal> Price{get; set;} = null;
         public string WarrantyStatus {get; set;} = "Two year warranty";
         public decimal DiscountRate {get; set;} = 0; 
-        public decimal? DiscountedPrice {get; set;}  
+        public decimal? DiscountedPrice {get; set;} 
+        //public decimal Cogs {get; set;} 
     }
 }

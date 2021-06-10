@@ -1,4 +1,4 @@
-namespace onlinestoreproject_be.Services
+namespace OnlineStoreProject.Services
 {
     public static class Utility
     {

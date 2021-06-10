@@ -49,7 +49,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
                         response.Message = MessageConstants.USER_EXIST;  
                         return response;
                     }
-                    onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                    Utility.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
                     Customer user = new Customer{Name=request.Name,Surname= request.Surname,Username= request.Username, 
                     MailAddress=request.MailAddress,PhoneNumber= request.PhoneNumber, PasswordHash = passwordHash,PasswordSalt=passwordSalt};
 
@@ -170,7 +170,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
                     response.Message = MessageConstants.USER_WRONG_PASS_NAME_ERROR;
                 }
                 else{
-                    onlinestoreproject_be.Services.Utility.CreatePasswordHash(request.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+                    Utility.CreatePasswordHash(request.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
                     customer.PasswordHash= passwordHash;
                     customer.PasswordSalt = passwordSalt;
                     _context.Customers.Update(customer);
