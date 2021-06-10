@@ -355,5 +355,28 @@ namespace OnlineStoreProject.Services
             }
             return response;
         } 
+           public async Task<ServiceResponse<string>> SetDiscount(decimal discRate,int prodId){
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+                Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == prodId);
+                if (product ==null){
+                    response.Success = false;
+                    response.Message = MessageConstants.PRODUCT_UPDATE_FAIL;
+                    return response;
+                }
+                product.DiscountRate = discRate;
+                product.DiscountedPrice = product.Price * (1-discRate);
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Message = MessageConstants.PRODUCT_UPDATE_SUCCESS;
+
+
+            }catch(Exception e){
+                response.Success = false;
+                response.Message= e.Message;
+            }
+            return response;
+        }
     }
 }

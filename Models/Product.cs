@@ -18,6 +18,6 @@ namespace OnlineStoreProject.Models
         public string WarrantyStatus {get; set;} = "Two year warranty";
         public decimal DiscountRate {get; set;} = 0; 
         public decimal? DiscountedPrice {get; set;} 
-        //public decimal Cogs {get; set;} 
+        public decimal Cogs {get; set;} 
     }
 }

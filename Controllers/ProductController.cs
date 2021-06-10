@@ -182,5 +182,14 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
+        [HttpPut("SetDiscount/{discrate}/{id}")]
+        public async Task<IActionResult> SetDiscount(decimal discRate,int Id){
+            ServiceResponse<string> response = await _productService.SetDiscount(discRate, Id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
