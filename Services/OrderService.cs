@@ -256,8 +256,8 @@ namespace OnlineStoreProject.Services
             try{
             DateTime curr = start;
             List<decimal> stats = new List<decimal>();
-                while(curr <=end || curr.Hour == end.Hour){
-                    List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5 && c.CreateDate.Hour == curr.Hour && c.CreateDate.Day == curr.Day && c.CreateDate.Month == curr.Month).ToListAsync();
+                while(curr <=end || curr.Day == end.Day){
+                    List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5 && c.CreateDate.Day == curr.Day && c.CreateDate.Month == curr.Month).ToListAsync();
                     if(dbOrders != null && dbOrders.Count!=0){
                         decimal sum = 0;
                         foreach (var order in dbOrders)
@@ -269,7 +269,7 @@ namespace OnlineStoreProject.Services
                     }else{
                         stats.Add(0);
                     }
-                    curr = curr.AddHours(1);
+                    curr = curr.AddHours(24);
                 }
                 response.Data= stats;
                 response.Success = true;
