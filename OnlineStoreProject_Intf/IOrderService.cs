@@ -18,6 +18,6 @@ namespace OnlineStoreProject_Intf
         Task<ServiceResponse<string>> ChangeOrderStatus(OrderDTO request);
         Task<ServiceResponse<string>> Refund(int orderId);
         Task<ServiceResponse<List<OrderDTO>>> GetPendingRefunds();
-        Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end);
+        Task<ServiceResponse<List<decimal>>> SalesAnalytics(string strt, string endd);
     }
 }

@@ -87,8 +87,8 @@ namespace OnlineStoreProject.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetSaleStatistic")]
-        public async Task<IActionResult> SalesAnalytics(DateTime start, DateTime end){
+        [HttpGet("GetSaleStatistic/{start}/{end}")]
+        public async Task<IActionResult> SalesAnalytics(string start, string end){
             ServiceResponse<List<decimal>> response = await _orderService.SalesAnalytics(start,end);
             if (!response.Success){
                 return BadRequest(response);

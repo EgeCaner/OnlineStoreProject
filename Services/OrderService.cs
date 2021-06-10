@@ -249,17 +249,35 @@ namespace OnlineStoreProject.Services
             return response;
         } 
 
-        public async Task<ServiceResponse<List<decimal>>> SalesAnalytics(DateTime start, DateTime end){
+        public async Task<ServiceResponse<List<decimal>>> SalesAnalytics(string strt, string endd){
             ServiceResponse<List<decimal>> response = new ServiceResponse<List<decimal>>();
-            if(false){
-                List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5 && c.CreateDate>= start && c.CreateDate<= end).ToListAsync();
-                if(dbOrders != null){
-                    
-
+            DateTime start = Convert.ToDateTime(strt);
+            DateTime end = Convert.ToDateTime(endd);
+            try{
+            DateTime curr = start;
+            List<decimal> stats = new List<decimal>();
+                while(curr <=end || curr.Hour == end.Hour){
+                    List<Order> dbOrders = await _context.Orders.Where(c => c.Status != 3 && c.Status !=5 && c.CreateDate.Hour == curr.Hour && c.CreateDate.Day == curr.Day && c.CreateDate.Month == curr.Month).ToListAsync();
+                    if(dbOrders != null && dbOrders.Count!=0){
+                        decimal sum = 0;
+                        foreach (var order in dbOrders)
+                        {
+                            Product dbProds = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == order.ProductId);
+                            sum+=  order.Price - dbProds.Cogs;  
+                        }
+                        stats.Add(sum);
+                    }else{
+                        stats.Add(0);
+                    }
+                    curr = curr.AddHours(1);
                 }
+                response.Data= stats;
+                response.Success = true;
+                response.Message ="Ok";
+            }catch(Exception e){
+                response.Success = false;
+                response.Message = e.Message;
             }
-            response.Success =false;
-            response.Message = MessageConstants.METHOD_NOT_IMPLEMENTED;
             return response;
         }
     }

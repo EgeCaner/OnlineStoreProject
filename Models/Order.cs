@@ -10,7 +10,7 @@ namespace OnlineStoreProject.Models
         public int CustomerId{get; set;}
         public int Status{get; set;} = 0; 
         public string Address {get; set;}
-        public Nullable<DateTime> CreateDate { get;  set; }
+        public DateTime CreateDate { get;  set; }
         public decimal Price {get; set;}
         public Nullable<DateTime> ModifyDate { get;  set; }
     }
