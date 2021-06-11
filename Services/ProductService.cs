@@ -355,7 +355,7 @@ namespace OnlineStoreProject.Services
             }
             return response;
         } 
-           public async Task<ServiceResponse<string>> SetDiscount(decimal discRate,int prodId){
+        public async Task<ServiceResponse<string>> SetDiscount(decimal discRate,int prodId){
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
                 Product product = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == prodId);

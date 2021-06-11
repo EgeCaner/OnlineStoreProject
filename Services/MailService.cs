@@ -245,7 +245,7 @@ namespace OnlineStoreProject.Services
             
             try{
                 Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
-                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == dbCustomer.Id && c.CreateDate >= DateTime.Now.AddMinutes(-3)).ToListAsync();
+                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == dbCustomer.Id && c.CreateDate.Minute >= DateTime.Now.AddMinutes(-3).Minute && c.CreateDate.Day == DateTime.Now.Day && c.CreateDate.Hour == DateTime.Now.Hour ).ToListAsync();
                 List<Product> prods = new List<Product>();
                 foreach (var order in dbOrder)
                 {
@@ -264,7 +264,7 @@ namespace OnlineStoreProject.Services
                     {
                         itr.Add(ItemRow.Make(prods[i].ProductName, prods[i].Description, (int)dbOrder[i].Quantity, 20,(decimal)prods[i].Price, (decimal)dbOrder[i].Price));
                     }
-                new InvoicerApi(SizeOption.A4, OrientationOption.Landscape, "₺")
+                new InvoicerApi(SizeOption.A4, OrientationOption.Landscape, "$")
                 .TextColor("#CC0000")
                 .BackColor("#FFD6CC")
                 .Company(Address.Make("FROM", new string [] {"TechIst Limited", "TechIst House"}))

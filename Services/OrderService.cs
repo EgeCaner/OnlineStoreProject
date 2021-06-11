@@ -186,6 +186,13 @@ namespace OnlineStoreProject.Services
                     }else if(request.Status == 2){
                         dbOrder.Status = request.Status;
                         await _mailService.ProductDelivered(GetUserId(), dbOrder.Id);
+                    }else if(dbOrder.Status ==0 && request.Status ==3){
+                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
+                        dbProduct.Quantity += request.Quantity;
+                        dbOrder.Status = request.Status;
+                        _context.Products.Update(dbProduct);
+                    }else if(request.Status ==3){
+                        System.Diagnostics.Debug.WriteLine("Order cannot cancel if it is not in processing status");
                     }else{
                         dbOrder.Status = request.Status;
                     }
