@@ -175,8 +175,8 @@ namespace OnlineStoreProject.Services
                 Order dbOrder = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);
                 if (dbOrder != null){
                     if (request.Status == 5){
-                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
-                        dbProduct.Quantity += request.Quantity;
+                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == dbOrder.ProductId);
+                        dbProduct.Quantity += dbOrder.Quantity;
                         dbOrder.Status = request.Status;
                         _context.Products.Update(dbProduct); 
                         await _mailService.ProductRefunded(GetUserId(), dbOrder.Id);
@@ -187,8 +187,8 @@ namespace OnlineStoreProject.Services
                         dbOrder.Status = request.Status;
                         await _mailService.ProductDelivered(GetUserId(), dbOrder.Id);
                     }else if(dbOrder.Status ==0 && request.Status ==3){
-                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == request.ProductId);
-                        dbProduct.Quantity += request.Quantity;
+                        Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == dbOrder.ProductId);
+                        dbProduct.Quantity += dbOrder.Quantity;
                         dbOrder.Status = request.Status;
                         _context.Products.Update(dbProduct);
                     }else if(request.Status ==3){
