@@ -21,6 +21,10 @@ using Syncfusion.Drawing;
 using System.IO;
 using Wkhtmltopdf.NetCore;
 using System.Text;
+using InvoicerNETCore.Services;
+using InvoicerNETCore.Services.Impl;
+using InvoicerNETCore.Models;
+using InvoicerNETCore.Helpers;
 namespace OnlineStoreProject.Services
 {
     public class MailService : IMailService
@@ -70,9 +74,46 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public Task<ServiceResponse<string>> SendInvoice(List<OrderDTO> orders)
+        public async Task<ServiceResponse<string>> SendInvoice()
         {
-            throw new NotImplementedException();
+            ServiceResponse<string> response = new ServiceResponse<string>();
+            try{
+            Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("TechIst 34","techist9@gmail.com"));
+            message.To.Add(new MailboxAddress(dbCustomer.Name + " " + dbCustomer.Surname,dbCustomer.MailAddress));
+            message.Subject =  "Invoice";
+            var body = new TextPart("plain"){
+                Text =  "Dear " + dbCustomer.Name 
+                + ",\nYou have succesfuly purchased products. Invoice of your purchase is attached to this mail. \nFor any problem you can reach us from: techist9@gmail.com" 
+            };
+            string path = "./21235.pdf";
+            var bodyBuilder = new BodyBuilder();
+            var attachment = (MimePart) bodyBuilder.Attachments.Add(path);
+            attachment.ContentTransferEncoding = ContentEncoding.Base64;
+           
+            var multipart = new Multipart ("mixed");
+            multipart.Add(body);
+            multipart.Add(attachment);
+
+
+            message.Body = multipart;
+
+            using (var client = new SmtpClient()){
+                client.Connect("smtp.gmail.com", 587 ,false);
+                client.Authenticate("techist9@gmail.com", "techist@34");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            response.Success = true;
+            response.Message= "Ok";
+            System.Diagnostics.Debug.WriteLine("Sending invoice mail success");
+            }catch(Exception e){
+                response.Success = false;
+                response.Message = e.Message;
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            return response;
         }
 
         public async Task<ServiceResponse<string>> ProductInTransit(int userId, int orderId)
@@ -199,59 +240,50 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<IActionResult>> CreatePdf(int Id){
-            ServiceResponse<IActionResult> response = new ServiceResponse<IActionResult>();
+        public async Task<ServiceResponse<string>> CreatePdf(){
+            ServiceResponse<string> response = new ServiceResponse<string>();
             
             try{
-                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == Id).ToListAsync();
-                Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == dbOrder[0].CustomerId);
-                List<Product> dbProds = new List<Product>();
-                for(int i= 0; i<dbOrder.Count;i++){
-                    Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == dbOrder[i].ProductId);
-                    dbProds.Add(dbProduct);
+                Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
+                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == dbCustomer.Id && c.CreateDate >= DateTime.Now.AddMinutes(-3)).ToListAsync();
+                List<Product> prods = new List<Product>();
+                foreach (var order in dbOrder)
+                {
+                    Product dbProduct = await _context.Products.FirstOrDefaultAsync(c => c.ProductId == order.ProductId);
+                    prods.Add(dbProduct);
                 }
-                
-
-                PdfView pdfView = new PdfView();
-                pdfView.customer = dbCustomer;
-                pdfView.order = dbOrder;
-                pdfView.product= dbProds;
-
-                var html = new StringBuilder();
-                html.Append(@"<html><head>");
-                html.Append(@" </head><body>");
-                html.Append(@"<h2>Order Information</h2>");
-                html.Append(@"<div> 
-            <h1>Dear "+ dbCustomer.Name+" "+dbCustomer.Surname+ @" invoice of your order with the date"+ dbOrder[0].CreateDate+@"</h1>
-        </div>");
-                html.Append(@"<table>
-            <tbody>
-            <tr>
-                <th>OrderID</th>
-                <th>Product Image</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Date of Order</th>
-                
-            </tr>");
-                for(int i=0; i<dbOrder.Count-1;i++){
-                    html.AppendFormat(@"<tr>
-                                            <td>{0}</td>
-                                            <td>{1}</td>
-                                            <td>{2}</td>
-                                            <td>{3}</td>        
-                                            <td>{4}}</td>
-                                        </tr>",dbOrder[i].Id.ToString(),dbProds[i].ImageUrl.ToString(),dbOrder[i].Quantity.ToString(), dbOrder[i].Price.ToString(), dbOrder[i].CreateDate.ToString());
-
+                decimal sum=0;
+                foreach (var order in dbOrder)
+                {
+                    sum+=order.Price;
                 }
-                html.Append(@" </tbody></table></body></html>");
 
-
+                Guid rand = Guid.NewGuid();
+                List<ItemRow> itr = new List<ItemRow> ();
+                 for(int i=0;i<prods.Count;i++)
+                    {
+                        itr.Add(ItemRow.Make(prods[i].ProductName, prods[i].Description, (int)dbOrder[i].Quantity, 20,(decimal)prods[i].Price, (decimal)dbOrder[i].Price));
+                    }
+                new InvoicerApi(SizeOption.A4, OrientationOption.Landscape, "₺")
+                .TextColor("#CC0000")
+                .BackColor("#FFD6CC")
+                .Company(Address.Make("FROM", new string [] {"TechIst Limited", "TechIst House"}))
+                .Client(Address.Make("BILLING TO",new string [] {dbCustomer.Name+" "+dbCustomer.Surname, dbCustomer.Address , "WR## 2DJ"}))
+                .Items(itr)
+                .Totals(new List<TotalRow> {
+                    TotalRow.Make("Total", (decimal)sum, true)
+                })
+                .Details(new List<DetailRow> {
+                    DetailRow.Make("PAYMENT INFORMATION", "Make all cheques payable to TechIst TR Limited.", "", "If you have any questions concerning this invoice, contact our sales department at techist9@gmail.com.", "", "Thank you for your business.")
+                })
+                .Footer("http://www.TechIst.co.tr")
+                .Save();
+    
                 if(dbOrder != null){
-                  response.Data = await _generatePdf.GetPdf(html.ToString());
                   response.Success = true;
                   response.Message = "Ok";
                 }
+                var ans =await SendInvoice();
             }catch(Exception e){
                 response.Success= false;
                 response.Message= e.Message;

@@ -85,7 +85,7 @@ namespace OnlineStoreProject.Services
             }
             return response;
         }
-            public async Task<ServiceResponse<OrderDTO>> UpdateOrder(OrderDTO request){
+        public async Task<ServiceResponse<OrderDTO>> UpdateOrder(OrderDTO request){
             ServiceResponse<OrderDTO> response = new ServiceResponse<OrderDTO>();
             try{
                 Order order = await _context.Orders.FirstOrDefaultAsync(c => c.Id == request.Id);

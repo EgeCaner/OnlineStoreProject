@@ -6,7 +6,7 @@ namespace OnlineStoreProject.Models
     public class PdfView
     {
         public Customer customer {get; set;}
-        public List<Order> order {get; set;}
-        public List<Product> product {get; set;}
+        public Order order {get; set;}
+        public Product product {get; set;}
     }
 }

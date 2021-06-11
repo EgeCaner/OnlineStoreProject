@@ -95,14 +95,14 @@ namespace OnlineStoreProject.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("PDF/{id}")]
+        [HttpGet("PDF")]
         [AllowAnonymous]
-        public async Task<IActionResult> OrderPDF(int Id){
-            ServiceResponse<IActionResult> response = await _mailService.CreatePdf(Id);
+        public async Task<IActionResult> OrderPDF(){
+            ServiceResponse<string> response = await _mailService.CreatePdf();
             if (!response.Success){
                 return BadRequest(response);
             }
-            return response.Data;
+            return Ok(response);
         }
     }
 }
