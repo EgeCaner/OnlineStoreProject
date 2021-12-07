@@ -40,7 +40,7 @@ namespace OnlineStoreProject.Services.AuthenticationService
 
         public async Task<AuthenticationResponse<string>> Register(UserRegisterRequest request)
         {
-             AuthenticationResponse<string> response = new AuthenticationResponse<string>();
+            AuthenticationResponse<string> response = new AuthenticationResponse<string>();
             try{
                 if(request.Username!= null && request.Password !=null){
                     if (await UserExists(request.Username))

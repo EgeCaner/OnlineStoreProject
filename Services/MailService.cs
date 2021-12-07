@@ -74,11 +74,11 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<string>> SendInvoice()
+        public async Task<ServiceResponse<string>> SendInvoice(int Id)
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
             try{
-            Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
+            Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == Id);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("TechIst 34","techist9@gmail.com"));
             message.To.Add(new MailboxAddress(dbCustomer.Name + " " + dbCustomer.Surname,dbCustomer.MailAddress));
@@ -240,12 +240,12 @@ namespace OnlineStoreProject.Services
             return response;
         }
 
-        public async Task<ServiceResponse<string>> CreatePdf(){
+        public async Task<ServiceResponse<string>> CreatePdf(int Id){
             ServiceResponse<string> response = new ServiceResponse<string>();
             
             try{
-                Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == GetUserId());
-                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == dbCustomer.Id && c.CreateDate.Minute >= DateTime.Now.AddMinutes(-3).Minute && c.CreateDate.Day == DateTime.Now.Day && c.CreateDate.Hour == DateTime.Now.Hour ).ToListAsync();
+                Customer dbCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == Id);
+                List<Order> dbOrder = await _context.Orders.Where(c => c.CustomerId == dbCustomer.Id &&  c.CreateDate.Day == DateTime.Now.Day).ToListAsync();
                 List<Product> prods = new List<Product>();
                 foreach (var order in dbOrder)
                 {
@@ -255,6 +255,7 @@ namespace OnlineStoreProject.Services
                 decimal sum=0;
                 foreach (var order in dbOrder)
                 {
+
                     sum+=order.Price;
                 }
 
@@ -283,7 +284,7 @@ namespace OnlineStoreProject.Services
                   response.Success = true;
                   response.Message = "Ok";
                 }
-                var ans =await SendInvoice();
+                var ans =await SendInvoice(Id);
             }catch(Exception e){
                 response.Success= false;
                 response.Message= e.Message;
